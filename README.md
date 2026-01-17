@@ -1,1 +1,6 @@
 # NotOmegaSudoku
+
+
+
+sudoku solver. 
+
