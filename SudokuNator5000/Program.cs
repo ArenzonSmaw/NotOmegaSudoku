@@ -10,6 +10,11 @@ namespace SudokuNator5000
     {
         static void Main(string[] args)
         {
+            int[,] sqrs = { { 0, 0, 0, 1 }, { 0, 2, 3, 0 }, { 3, 4, 1, 2 }, { 2, 0, 0, 3 } };
+            Board brd = new Board(4);
+            brd.LoadBoard(sqrs);
+
+            brd.printBoard();
         }
     }
 }

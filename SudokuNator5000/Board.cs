@@ -1,0 +1,128 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SudokuNator5000
+{
+    internal class Board// : ISolvable
+    {
+        private int size, root_size; // size of the board side, square root of that size
+        private Square[,] board_mat;
+
+        public Board (int size)
+        {
+            this.size = size;
+            this.root_size = (int)Math.Sqrt(size);
+            this.board_mat = new Square[size, size];
+        }
+
+        private HashSet<int> GetExistingValues(int row, int col)
+        {
+            HashSet<int> set = new HashSet<int>();
+            Square temp;
+            int block_col = col - col % root_size;
+            int block_row = row - row % root_size;
+            for (int i = 0; i < root_size; i++) //Check the current block
+            { 
+                for (int j = 0; j < root_size; j++)
+                {
+                    temp = board_mat[block_row+i, block_col+j];
+                    if (temp != null && temp.GetValue() > 0)
+                        set.Add(temp.GetValue());
+                }
+            }
+            for(int i = 0; i < size; i++) // Check row and column
+            {
+                temp = board_mat[row, i];
+                if (temp != null && temp.GetValue() > 0)
+                    set.Add(temp.GetValue());
+                temp = board_mat[i, col];
+                if (temp != null && temp.GetValue() > 0)
+                    set.Add(temp.GetValue());
+            }
+            return set;
+        }
+
+        public void LoadBoard(int[,] numMatrix)
+        {
+            //gets: matrix of ints representing the sudoku board
+            //loads the board onto the object and updates notes on each square
+            if (numMatrix == null || numMatrix.GetLength(0) < size || numMatrix.GetLength(1) < size)
+                throw new ArgumentException("matrix size does not fit the board");
+            for (int i = 0; i < size; i++)
+            {
+                for (int j = 0; j < size; j++)
+                {
+                    if (numMatrix[i, j] != 0)
+                        this.board_mat[i, j] = new Square(numMatrix[i,j]);
+                    else
+                    {
+                        this.board_mat[i,j] = new Square(GetExistingValues(i,j), size);
+                    }
+                }
+            }
+        }
+
+        public bool Insert(int value, int row, int col)
+        {
+            //inserts the value into the matrix, returns true if successful
+            //if the square is already solved, insert is not successful and false will be returned
+            if (board_mat[row, col].GetValue() > 0)
+                return false;
+
+            board_mat[row, col] = new Square(value);
+            return false;
+        }
+
+        public Square[,] GetBoardMat() => board_mat;
+
+        public void printBoard()
+        {
+            Console.ResetColor();
+            for (int i = 0; i < size; i++)
+                Console.Write("----");
+            Console.WriteLine("-");
+            for (int i = 0; i < size; i++)
+            {
+                for (int j = 0; j < size; j++)
+                {
+                    if (j % Math.Sqrt(size) != 0)
+                        Console.ForegroundColor = ConsoleColor.DarkBlue;
+                    Console.Write("| ");
+                    Console.ResetColor();
+                    if (board_mat[i, j].GetValue() == 0)
+                        Console.Write(" ");
+                    else
+                        Console.Write(board_mat[i, j].GetValue());
+                    Console.Write(" ");
+                }
+                if (i < size - 1)
+                {
+                    Console.Write("|\n|");
+                    
+                    for (int j = 0; j < size ; j++)
+                    {
+                        if (i % Math.Sqrt(size) == 0)
+                            Console.ForegroundColor = ConsoleColor.DarkBlue;
+                        Console.Write("---");
+                        if (j % Math.Sqrt(size) != 0)
+                            Console.ResetColor();
+                        Console.Write("|");
+
+                    }
+                    Console.ResetColor();
+                    Console.WriteLine();
+                }
+                
+            }
+            Console.WriteLine("|");
+            for (int i = 0; i < (size * 4) + 1; i++)
+                Console.Write("-");
+            Console.WriteLine("\n");
+        }
+
+        
+    }
+}
