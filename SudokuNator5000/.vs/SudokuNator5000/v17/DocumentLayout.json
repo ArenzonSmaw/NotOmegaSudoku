@@ -3,20 +3,20 @@
   "WorkspaceRootPath": "C:\\Users\\arenz\\source\\repos\\OmegaSudoku\\NotOmegaSudoku\\SudokuNator5000\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{3E8839B4-714B-44F6-BFCC-AE595DDCCDA5}|SudokuNator5000.csproj|C:\\Users\\arenz\\source\\repos\\OmegaSudoku\\NotOmegaSudoku\\SudokuNator5000\\board.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{3E8839B4-714B-44F6-BFCC-AE595DDCCDA5}|SudokuNator5000.csproj|C:\\Users\\arenz\\source\\repos\\OmegaSudoku\\NotOmegaSudoku\\SudokuNator5000\\boardsolver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3E8839B4-714B-44F6-BFCC-AE595DDCCDA5}|SudokuNator5000.csproj|solutionrelative:boardsolver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3E8839B4-714B-44F6-BFCC-AE595DDCCDA5}|SudokuNator5000.csproj|c:\\users\\arenz\\source\\repos\\omegasudoku\\notomegasudoku\\sudokunator5000\\board.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3E8839B4-714B-44F6-BFCC-AE595DDCCDA5}|SudokuNator5000.csproj|solutionrelative:board.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3E8839B4-714B-44F6-BFCC-AE595DDCCDA5}|SudokuNator5000.csproj|c:\\users\\arenz\\source\\repos\\omegasudoku\\notomegasudoku\\sudokunator5000\\isolvable.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3E8839B4-714B-44F6-BFCC-AE595DDCCDA5}|SudokuNator5000.csproj|solutionrelative:isolvable.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3E8839B4-714B-44F6-BFCC-AE595DDCCDA5}|SudokuNator5000.csproj|C:\\Users\\arenz\\source\\repos\\OmegaSudoku\\NotOmegaSudoku\\SudokuNator5000\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3E8839B4-714B-44F6-BFCC-AE595DDCCDA5}|SudokuNator5000.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{3E8839B4-714B-44F6-BFCC-AE595DDCCDA5}|SudokuNator5000.csproj|C:\\Users\\arenz\\source\\repos\\OmegaSudoku\\NotOmegaSudoku\\SudokuNator5000\\square.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3E8839B4-714B-44F6-BFCC-AE595DDCCDA5}|SudokuNator5000.csproj|solutionrelative:square.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3E8839B4-714B-44F6-BFCC-AE595DDCCDA5}|SudokuNator5000.csproj|C:\\Users\\arenz\\source\\repos\\OmegaSudoku\\NotOmegaSudoku\\SudokuNator5000\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3E8839B4-714B-44F6-BFCC-AE595DDCCDA5}|SudokuNator5000.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,49 +26,49 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "ISolvable.cs",
-              "DocumentMoniker": "C:\\Users\\arenz\\source\\repos\\OmegaSudoku\\NotOmegaSudoku\\SudokuNator5000\\ISolvable.cs",
-              "RelativeDocumentMoniker": "ISolvable.cs",
-              "ToolTip": "C:\\Users\\arenz\\source\\repos\\OmegaSudoku\\NotOmegaSudoku\\SudokuNator5000\\ISolvable.cs",
-              "RelativeToolTip": "ISolvable.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAIAAAAAAAAAA==",
+              "DocumentIndex": 0,
+              "Title": "BoardSolver.cs",
+              "DocumentMoniker": "C:\\Users\\arenz\\source\\repos\\OmegaSudoku\\NotOmegaSudoku\\SudokuNator5000\\BoardSolver.cs",
+              "RelativeDocumentMoniker": "BoardSolver.cs",
+              "ToolTip": "C:\\Users\\arenz\\source\\repos\\OmegaSudoku\\NotOmegaSudoku\\SudokuNator5000\\BoardSolver.cs",
+              "RelativeToolTip": "BoardSolver.cs",
+              "ViewState": "AgIAACUAAAAAAAAAAAAYwDUAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-23T18:53:20.124Z",
+              "WhenOpened": "2026-01-30T11:07:55.598Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 2,
               "Title": "Square.cs",
               "DocumentMoniker": "C:\\Users\\arenz\\source\\repos\\OmegaSudoku\\NotOmegaSudoku\\SudokuNator5000\\Square.cs",
               "RelativeDocumentMoniker": "Square.cs",
               "ToolTip": "C:\\Users\\arenz\\source\\repos\\OmegaSudoku\\NotOmegaSudoku\\SudokuNator5000\\Square.cs",
               "RelativeToolTip": "Square.cs",
-              "ViewState": "AgIAAAsAAAAAAAAAAAAAwBwAAAAMAAAAAAAAAA==",
+              "ViewState": "AgIAABUAAAAAAAAAAAAYwCIAAAAkAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-01-20T21:42:51.374Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "Board.cs",
               "DocumentMoniker": "C:\\Users\\arenz\\source\\repos\\OmegaSudoku\\NotOmegaSudoku\\SudokuNator5000\\Board.cs",
               "RelativeDocumentMoniker": "Board.cs",
               "ToolTip": "C:\\Users\\arenz\\source\\repos\\OmegaSudoku\\NotOmegaSudoku\\SudokuNator5000\\Board.cs",
               "RelativeToolTip": "Board.cs",
-              "ViewState": "AgIAAGkAAAAAAAAAAADwv30AAAAIAAAAAAAAAA==",
+              "ViewState": "AgIAAHoAAAAAAAAAAAAuwIAAAAAiAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-01-20T21:36:40.149Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\arenz\\source\\repos\\OmegaSudoku\\NotOmegaSudoku\\SudokuNator5000\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",

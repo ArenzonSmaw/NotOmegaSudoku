@@ -33,8 +33,6 @@ namespace SudokuNator5000
             if (notes.Contains(value))
             {
                 notes.Remove(value);
-                if (notes.Count == 1)
-                    value = notes.ToArray()[0];
                 return true;
             }
             return false;

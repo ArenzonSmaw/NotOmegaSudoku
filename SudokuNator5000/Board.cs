@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SudokuNator5000
 {
-    internal class Board// : ISolvable
+    internal class Board
     {
         private int size, root_size; // size of the board side, square root of that size
         private Square[,] board_mat;
@@ -123,6 +123,10 @@ namespace SudokuNator5000
             Console.WriteLine("\n");
         }
 
-        
+        public bool Solve()
+        {
+            BoardSolver solver = new BoardSolver(this);
+            return solver.Solve();
+        }
     }
 }
