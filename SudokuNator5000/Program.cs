@@ -15,6 +15,10 @@ namespace SudokuNator5000
             brd.LoadBoard(sqrs);
 
             brd.printBoard();
+
+            Console.WriteLine(brd.Solve());
+
+            brd.printBoard();
         }
     }
 }

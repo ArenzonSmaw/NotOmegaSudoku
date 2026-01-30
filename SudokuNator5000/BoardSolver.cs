@@ -35,23 +35,23 @@ namespace SudokuNator5000
             Square sqr = this.FindWithNotes(1); //todo: implement method to find a square with X amount of notes
             while (sqr != null && !isSolved)
             {
-                this.SolveFor(sqr, sqr.GetNotes()[0]); //todo: implement method to solve a square and update notes on neighbors
+                this.SolveFor(sqr, sqr.GetNotes().ToArray()[0]); //todo: implement method to solve a square and update notes on neighbors
                 sqr = this.FindWithNotes(1);
             }
             if (isSolved)
                 return true;
-            int minNotes = 2;
+            /*int minNotes = 2;
             while (minNotes <= size && !isSolved)
             {
                 sqr = this.FindWithNotes(minNotes);
                 while (sqr != null && !isSolved)
                 {
                     int safenote = this.FindSafeNote(sqr); //todo: find 
-                    this.GuessFor(sqr, sqr.GetNotes()[0]); //todo: implement method to guess a possibility for a square with backtracking
+                    this.GuessFor(sqr, safenote); //todo: implement method to guess a possibility for a square with backtracking
                     sqr = this.FindWithNotes(minNotes);
                 }
                 minNotes++;
-            }
+            }*/
             return isSolved;
         }
 
