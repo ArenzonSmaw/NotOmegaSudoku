@@ -41,5 +41,10 @@ namespace SudokuNator5000
         public int GetValue() => value;
 
         public HashSet<int> GetNotes() => notes;
+
+        public void SolveFor(int newValue)
+        {
+            value = newValue;
+        }
     }
 }
