@@ -13,6 +13,7 @@ namespace SudokuNator5000
         private Square[,] squares;
         private bool isSolved;
         private int size;
+        private Stack<Move> moveStack;
 
         public BoardSolver(Board board)
         {
@@ -57,7 +58,20 @@ namespace SudokuNator5000
 
         public void SolveFor(Square sqr, int solution)
         {
+            //if (!sqr.GetNotes().Contains(solution)) throw new WrongSolutionException();
+            long offset = -1;
+            unsafe // Project -> properties -> Build -> Allow unsafe code
+            {
+                fixed (Square* sqr_ofst = &(this.squares[0, 0]))
+                    offset = &sqr - sqr_ofst;
+            }
+            if (offset > Math.Pow(size, 2) || offset < 0)
+            {
+                //throw new InvalidSquareException();
+            }
+            int i = (int) (offset / size), j = (int) (offset % size);
 
+            sqr.SolveFor(solution);
         }
 
         public void GuessFor(Square sqr, int solution)
