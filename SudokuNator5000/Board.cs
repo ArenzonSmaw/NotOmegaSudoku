@@ -13,8 +13,10 @@ namespace SudokuNator5000
 
         public Board (int size)
         {
-            this.size = size;
             this.root_size = (int)Math.Sqrt(size);
+            if ((size % root_size) != 0)
+                throw new InvalidInputException($"Board size must be squared and not {size}.");
+            this.size = size;
             this.board_mat = new Square[size, size];
         }
 

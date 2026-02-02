@@ -34,6 +34,8 @@ namespace SudokuNator5000
             if (this.value == 0)
             {
                 notes.Remove(value);
+                if (notes.Count() == 0)
+                    throw new InvalidInputException($"hold up how does this square have no possibilities? {Coordinates}");
                 return true;
             }
             return false;
@@ -45,7 +47,14 @@ namespace SudokuNator5000
         public (int, int) Coordinates { get { return coords; } }
         public void SolveFor(int newValue)
         {
+            if (!notes.Contains(newValue))
+                throw new InvalidInputException($"solution {newValue} for square {Coordinates} is wrong.");
             value = newValue;
+        }
+        public void Revert (int oldVal)
+        {
+            notes.Add(value);
+            value = oldVal;
         }
     }
 }

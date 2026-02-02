@@ -99,9 +99,12 @@ namespace SudokuNator5000
                 for (int i = 0; i < size && !doesAppear; i++)
                 {
                     check = squares[row, i];
-                    if (check.GetValue() ==0 && check != sqr &&  check.GetNotes().Contains(note)) 
-                        //if the square is not solved, different from sqr and has note as a possibility
-                        doesAppear = true; 
+                    if (check.GetValue() == note)
+                        doesAppear = true;
+                    else if (check.GetValue() ==0)
+                        if(check != sqr &&  check.GetNotes().Contains(note)) 
+                            //if the square is not solved, different from sqr and has note as a possibility
+                            doesAppear = true;
                 }
                 if (!doesAppear) return note;
 
@@ -109,9 +112,11 @@ namespace SudokuNator5000
                 for (int i = 0; i < size && !doesAppear; i++)
                 {
                     check= squares[i, col];
-                    if (check.GetValue() == 0 && check != sqr && check.GetNotes().Contains(note))
-                        //if the square is not solved, different from sqr and has note as a possibility
+                    if (check.GetValue() == note)
                         doesAppear = true;
+                    else if (check.GetValue() == 0 && check != sqr && check.GetNotes().Contains(note))
+                           //if the square is not solved, different from sqr and has note as a possibility
+                           doesAppear = true;
                 }
                 if (!doesAppear) return note;
 
@@ -125,9 +130,11 @@ namespace SudokuNator5000
                     for(int j = block_col; j < block_col + sqrt; j++)
                     {
                         check = squares[i, j];
-                        if (check.GetValue() == 0 && check != sqr && check.GetNotes().Contains(note))
-                            //if the square is not solved, different from sqr and has note as a possibility
+                        if (check.GetValue() == note)
                             doesAppear = true;
+                        else if (check.GetValue() == 0 && check != sqr && check.GetNotes().Contains(note))
+                                //if the square is not solved, different from sqr and has note as a possibility
+                                doesAppear = true;
                     }
                 }
                 if (!doesAppear) return note;
@@ -137,12 +144,13 @@ namespace SudokuNator5000
 
         public void SolveFor(Square sqr, int solution)
         {
-            //if (!sqr.GetNotes().Contains(solution)) throw new WrongSolutionException();
+            if (!sqr.GetNotes().Contains(solution)) 
+                throw new InvalidInputException($"Solution {solution} for square {sqr.Coordinates} is impossible.");
             (int, int) co_ordinatot = sqr.Coordinates;
 
-            moveStack.Push(new Move(co_ordinatot.Item1, co_ordinatot.Item2, sqr.GetValue(), solution));
+            Move mv = new Move(co_ordinatot.Item1, co_ordinatot.Item2, sqr.GetValue(), solution);
             sqr.SolveFor(solution);
-            UpdateNotes(co_ordinatot.Item1, co_ordinatot.Item2, solution);
+            UpdateNotes(co_ordinatot.Item1, co_ordinatot.Item2, solution, mv);
             //board.printBoard();
         }
 
@@ -154,9 +162,18 @@ namespace SudokuNator5000
             (int, int) co_ordinatot = sqr.Coordinates;
             int StackCount = moveStack.Count();
             moveStack.Push(new Move(co_ordinatot.Item1, co_ordinatot.Item2, sqr.GetValue(), solution));
-            SolveFor(sqr, solution);
-            if (Solve())
-                return true;
+            
+            try
+            {
+                SolveFor(sqr, solution);
+                if (Solve())
+                    return true;
+            }
+            catch (InvalidInputException e)
+            {
+                RevertChanges(StackCount);
+                return false;
+            }
             RevertChanges(StackCount);
             return false;
         }
@@ -168,11 +185,20 @@ namespace SudokuNator5000
 
             Square sqr;
             Move mv;
+            HashSet<(int, int)> affected;
             while(moveStack.Count > sCount) 
             {
                 mv = moveStack.Pop();
                 sqr = squares[mv.Row, mv.Col];
-                sqr.SolveFor(mv.OldVal);
+                sqr.Revert(mv.OldVal);
+
+                affected = mv.AffectedSqrs;
+                while (affected.Count() > 0)
+                {
+                    (int, int) coords = affected.First();
+                    squares[coords.Item1, coords.Item2].Revert(mv.OldVal);
+                    affected.Remove(coords);
+                }
             }
         }
 
@@ -218,7 +244,7 @@ namespace SudokuNator5000
                 }
             }
         }
-        public void UpdateNotes(int row, int col, int value)
+        public void UpdateNotes(int row, int col, int value, Move mv) 
         {
             //updaets row column and block of the square so that the new value is checked off
 
@@ -226,21 +252,31 @@ namespace SudokuNator5000
             for (int i = 0; i < size; i++)
             {
                 // Handle Row
-                sqr = squares[row, i];
-
-                if (sqr.GetValue() == 0)
+                if (i != col)
                 {
-                    sqr.CheckOff(value);
-                    if (sqr.GetNotes().Count() == 1)
-                        SolveFor(sqr, sqr.GetNotes().ToArray()[0]);
+                    sqr = squares[row, i];
+
+                    if (sqr.GetValue() == 0)
+                    {
+                        if(sqr.CheckOff(value))
+                            mv.AddAffected(row, i);
+                        if (sqr.GetNotes().Count() == 1)
+                            SolveFor(sqr, sqr.GetNotes().ToArray()[0]);
+                        
+                    }
                 }
                 // Handle Column
-                sqr = squares[i, col];
-                if (sqr.GetValue() == 0)
+                if (i != row)
                 {
-                    sqr.CheckOff(value);
-                    if (sqr.GetNotes().Count() == 1)
-                        SolveFor(sqr, sqr.GetNotes().ToArray()[0]);
+                    sqr = squares[i, col];
+                    if (sqr.GetValue() == 0)
+                    {
+                        if(sqr.CheckOff(value))
+                            mv.AddAffected(i, col);
+                        if (sqr.GetNotes().Count() == 1)
+                            SolveFor(sqr, sqr.GetNotes().ToArray()[0]);
+
+                    }
                 }
             }
             //Handle block
@@ -250,7 +286,9 @@ namespace SudokuNator5000
             {
                 for (int j = block_col*block_size; j < block_col + block_size; j++)
                 {
-                    squares[i, j].CheckOff(value);
+                    if ((i, j) != (row, col))
+                        if (squares[i, j].CheckOff(value))
+                            mv.AddAffected(i, j);
                 }
             }
         }
