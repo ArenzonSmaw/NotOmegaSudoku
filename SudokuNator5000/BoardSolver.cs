@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
@@ -11,7 +12,6 @@ namespace SudokuNator5000
     {
         private Board board;
         private Square[,] squares;
-        private bool isSolved;
         private int size;
         private Stack<Move> moveStack;
 
@@ -19,69 +19,240 @@ namespace SudokuNator5000
         {
             this.board = board;
             this.squares = board.GetBoardMat();
-            this.isSolved = true;
             this.size = squares.GetLength(0);
-            foreach (Square sqr in squares)
+            moveStack = new Stack<Move>();
+        }
+
+        public bool IsSolved()
+        {
+            bool isSolved = true;
+            foreach (Square square in squares)
             {
-                if (sqr.GetValue() == 0)
+                if (square.GetValue() == 0)
                 {
-                    this.isSolved = false;
+                    isSolved = false;
                     break;
                 }
             }
+            return isSolved;
         }
-
         public bool Solve()
         {
-            Square sqr = this.FindWithNotes(1); //todo: implement method to find a square with X amount of notes
-            while (sqr != null && !isSolved)
+            MakeNotes();
+            bool didChange = true;
+            Square sqr;
+            while(didChange)
             {
-                this.SolveFor(sqr, sqr.GetNotes().ToArray()[0]); //todo: implement method to solve a square and update notes on neighbors
-                sqr = this.FindWithNotes(1);
-            }
-            if (isSolved)
-                return true;
-            /*int minNotes = 2;
-            while (minNotes <= size && !isSolved)
-            {
-                sqr = this.FindWithNotes(minNotes);
-                while (sqr != null && !isSolved)
+                didChange = false;
+                for (int row = 0; row < size; row++)
                 {
-                    int safenote = this.FindSafeNote(sqr); //todo: find 
-                    this.GuessFor(sqr, safenote); //todo: implement method to guess a possibility for a square with backtracking
-                    sqr = this.FindWithNotes(minNotes);
+                    for(int col = 0; col < size; col++)
+                    {
+                        sqr = squares[row, col];
+                        if (sqr.GetValue() == 0)
+                        {
+                            int solution = IsSolvable(sqr);
+                            if (solution != 0)
+                            {
+                                SolveFor(sqr, solution);
+                                didChange = true;
+                            }
+                        }
+                    }
                 }
-                minNotes++;
-            }*/
-            return isSolved;
+            }
+            
+            for( int minNotes = 2; minNotes <= size; minNotes++)
+            {
+                for (int row = 0; row < size; row++)
+                {
+                    for (int col = 0; col < size; col++)
+                    {
+                        sqr = squares[row, col];
+                        if (sqr.GetValue() == 0)
+                        {
+                            if (GuessFor(sqr, sqr.GetNotes().First()))
+                                return true;
+                        }
+                    }
+                }
+            }
+
+            return IsSolved();
+        }
+
+        public int IsSolvable(Square sqr)
+        {
+            //gets square obj and coordinates
+            //returns a solution if sqr is solvable, else 0
+
+            Square check;
+            HashSet<int> notes = sqr.GetNotes();
+            int row = sqr.Coordinates.Item1;
+            int col = sqr.Coordinates.Item2;
+            bool doesAppear;
+            if (notes.Count() == 1)
+                return notes.First();
+            foreach (int note in notes)
+            {
+                doesAppear = false;
+                for (int i = 0; i < size && !doesAppear; i++)
+                {
+                    check = squares[row, i];
+                    if (check.GetValue() ==0 && check != sqr &&  check.GetNotes().Contains(note)) 
+                        //if the square is not solved, different from sqr and has note as a possibility
+                        doesAppear = true; 
+                }
+                if (!doesAppear) return note;
+
+                doesAppear = false;
+                for (int i = 0; i < size && !doesAppear; i++)
+                {
+                    check= squares[i, col];
+                    if (check.GetValue() == 0 && check != sqr && check.GetNotes().Contains(note))
+                        //if the square is not solved, different from sqr and has note as a possibility
+                        doesAppear = true;
+                }
+                if (!doesAppear) return note;
+
+                int sqrt = (int)Math.Sqrt(size);
+                doesAppear = false;
+                int block_row = (int)(row / sqrt);
+                int block_col = (int)(col / sqrt);
+
+                for(int i = block_row; i < block_row + sqrt && !doesAppear; i++)
+                {
+                    for(int j = block_col; j < block_col + sqrt; j++)
+                    {
+                        check = squares[i, j];
+                        if (check.GetValue() == 0 && check != sqr && check.GetNotes().Contains(note))
+                            //if the square is not solved, different from sqr and has note as a possibility
+                            doesAppear = true;
+                    }
+                }
+                if (!doesAppear) return note;
+            }
+            return 0;
         }
 
         public void SolveFor(Square sqr, int solution)
         {
             //if (!sqr.GetNotes().Contains(solution)) throw new WrongSolutionException();
-            long offset = -1;
-            unsafe // Project -> properties -> Build -> Allow unsafe code
-            {
-                fixed (Square* sqr_ofst = &(this.squares[0, 0]))
-                    offset = &sqr - sqr_ofst;
-            }
-            if (offset > Math.Pow(size, 2) || offset < 0)
-            {
-                //throw new InvalidSquareException();
-            }
-            int i = (int) (offset / size), j = (int) (offset % size);
+            (int, int) co_ordinatot = sqr.Coordinates;
 
+            moveStack.Push(new Move(co_ordinatot.Item1, co_ordinatot.Item2, sqr.GetValue(), solution));
             sqr.SolveFor(solution);
+            UpdateNotes(co_ordinatot.Item1, co_ordinatot.Item2, solution);
+            //board.printBoard();
         }
 
-        public void GuessFor(Square sqr, int solution)
+        public bool GuessFor(Square sqr, int solution)
         {
+            //gets: square object and possible solution
+            //returns: true if board is solvable for this guess and false otherwise
 
+            (int, int) co_ordinatot = sqr.Coordinates;
+            int StackCount = moveStack.Count();
+            moveStack.Push(new Move(co_ordinatot.Item1, co_ordinatot.Item2, sqr.GetValue(), solution));
+            SolveFor(sqr, solution);
+            if (Solve())
+                return true;
+            RevertChanges(StackCount);
+            return false;
         }
 
-        public Square FindWithNotes(int noteNum)
+        public void RevertChanges(int sCount)
         {
-            return null;
+            //gets a "checkpoint" from the moves stack and returns to that point
+            //pops past moves and reverses them
+
+            Square sqr;
+            Move mv;
+            while(moveStack.Count > sCount) 
+            {
+                mv = moveStack.Pop();
+                sqr = squares[mv.Row, mv.Col];
+                sqr.SolveFor(mv.OldVal);
+            }
+        }
+
+        public HashSet<Square> FindWithNotes(int noteNum)
+        {
+            //finds square with noteNum amount of notes
+
+            HashSet<Square> sqrSet = new HashSet<Square>();
+            for (int i = 0; i < size; i++)
+                for (int j = 0; j < size; j++)
+                    if (squares[i,j].GetValue() == 0 && squares[i,j].GetNotes().Count() == noteNum)
+                        sqrSet.Add(squares[i,j]);
+            return sqrSet;
+        }
+
+        public void MakeNotes()
+        {
+            //goes over the entire board and checks off all impossible possibilities
+
+            int block_size = (int)Math.Sqrt(size);
+            for (int i = 0; i < size; i++)
+            {
+                for (int j = 0; j < size; j++)
+                {
+                    if (squares[i, j].GetValue() != 0) continue;
+                    int block_row = i / block_size, block_col = j / block_size;
+
+                    //Handle block
+                    for (int r = block_row * block_size; r < block_row + block_size; r++)
+                        for (int c = block_col * block_size; c < block_col + block_size; c++)
+                        {
+                            squares[i, j].CheckOff(squares[r, c].GetValue());
+                            squares[r,c].GetValue();
+                        }
+                    if (squares[i, j].GetNotes().Count() == 1)
+                        continue;
+                    
+                    for(int k = 0; k < size; k++)
+                    {
+                        squares[i, j].CheckOff(squares[i, k].GetValue()); // Row
+                        squares[i, j].CheckOff(squares[k, j].GetValue()); // Column
+                    }
+                }
+            }
+        }
+        public void UpdateNotes(int row, int col, int value)
+        {
+            //updaets row column and block of the square so that the new value is checked off
+
+            Square sqr;
+            for (int i = 0; i < size; i++)
+            {
+                // Handle Row
+                sqr = squares[row, i];
+
+                if (sqr.GetValue() == 0)
+                {
+                    sqr.CheckOff(value);
+                    if (sqr.GetNotes().Count() == 1)
+                        SolveFor(sqr, sqr.GetNotes().ToArray()[0]);
+                }
+                // Handle Column
+                sqr = squares[i, col];
+                if (sqr.GetValue() == 0)
+                {
+                    sqr.CheckOff(value);
+                    if (sqr.GetNotes().Count() == 1)
+                        SolveFor(sqr, sqr.GetNotes().ToArray()[0]);
+                }
+            }
+            //Handle block
+            int block_size = (int)Math.Sqrt(size);
+            int block_row = row / block_size, block_col = col / block_size;
+            for (int i = block_row*block_size; i < block_row + block_size; i++)
+            {
+                for (int j = block_col*block_size; j < block_col + block_size; j++)
+                {
+                    squares[i, j].CheckOff(value);
+                }
+            }
         }
     }
 }

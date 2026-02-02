@@ -56,30 +56,25 @@ namespace SudokuNator5000
                 for (int j = 0; j < size; j++)
                 {
                     if (numMatrix[i, j] != 0)
-                        this.board_mat[i, j] = new Square(numMatrix[i,j]);
+                    {
+                        this.board_mat[i, j] = new Square(numMatrix[i, j]);
+                        
+                    }
                     else
                     {
-                        this.board_mat[i,j] = new Square(GetExistingValues(i,j), size);
+                        this.board_mat[i, j] = new Square(size, i, j);
                     }
+
+
                 }
             }
         }
 
-        public bool Insert(int value, int row, int col)
-        {
-            //inserts the value into the matrix, returns true if successful
-            //if the square is already solved, insert is not successful and false will be returned
-            if (board_mat[row, col].GetValue() > 0)
-                return false;
-
-            board_mat[row, col] = new Square(value);
-            return false;
-        }
-
         public Square[,] GetBoardMat() => board_mat;
 
-        public void printBoard()
+        public void PrintBoard()
         {
+            int sqrSize = (int) Math.Sqrt(size);
             Console.ResetColor();
             for (int i = 0; i < size; i++)
                 Console.Write("----");
@@ -88,7 +83,7 @@ namespace SudokuNator5000
             {
                 for (int j = 0; j < size; j++)
                 {
-                    if (j % Math.Sqrt(size) != 0)
+                    if (j % sqrSize != 0)
                         Console.ForegroundColor = ConsoleColor.DarkBlue;
                     Console.Write("| ");
                     Console.ResetColor();
@@ -104,10 +99,11 @@ namespace SudokuNator5000
                     
                     for (int j = 0; j < size ; j++)
                     {
-                        if (i % Math.Sqrt(size) == 0)
+                        if (i % sqrSize != sqrSize-1)
                             Console.ForegroundColor = ConsoleColor.DarkBlue;
+
                         Console.Write("---");
-                        if (j % Math.Sqrt(size) != 0)
+                        if (j % sqrSize == sqrSize-1)
                             Console.ResetColor();
                         Console.Write("|");
 
