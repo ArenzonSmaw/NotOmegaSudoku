@@ -34,10 +34,21 @@ namespace SudokuNator5000
                     break;
                 }
             }
-            return isSolved;
+            if (!isSolved) return false;
+            try
+            {
+                board.CheckValid();
+            }
+            catch (InvalidInputException)
+            { 
+                return false; 
+            }
+            return true;
         }
         public bool Solve()
         {
+            //solves board first by marking obvious solutions, then guessing a square with a minimal note count
+
             MakeNotes();
             bool didChange = true;
             Square sqr;
@@ -69,16 +80,24 @@ namespace SudokuNator5000
                     for (int col = 0; col < size; col++)
                     {
                         sqr = squares[row, col];
-                        if (sqr.GetValue() == 0)
+                        if (sqr.GetValue() == 0 && sqr.GetNotes().Count() == minNotes)
                         {
-                            if (GuessFor(sqr, sqr.GetNotes().First()))
-                                return true;
+                            while (sqr.GetNotes().Count() > 0)
+                            {
+                                int solution = sqr.GetNotes().First();
+                                if (GuessFor(sqr, solution))
+                                    return true;
+                                sqr.GetNotes().Remove(solution);
+                            }
+                            throw new UnsolvableBoardException("Unsolvable Board: The given board could not be solved...");
                         }
                     }
                 }
             }
 
-            return IsSolved();
+            if (IsSolved())
+                return true;
+            else throw new UnsolvableBoardException("Unsolvable Board: The given board could not be solved...");
         }
 
         public int IsSolvable(Square sqr)
@@ -122,8 +141,8 @@ namespace SudokuNator5000
 
                 int sqrt = (int)Math.Sqrt(size);
                 doesAppear = false;
-                int block_row = (int)(row / sqrt);
-                int block_col = (int)(col / sqrt);
+                int block_row = row - row%sqrt;
+                int block_col = col - col%sqrt;
 
                 for(int i = block_row; i < block_row + sqrt && !doesAppear; i++)
                 {
@@ -162,18 +181,19 @@ namespace SudokuNator5000
             (int, int) co_ordinatot = sqr.Coordinates;
             int StackCount = moveStack.Count();
             moveStack.Push(new Move(co_ordinatot.Item1, co_ordinatot.Item2, sqr.GetValue(), solution));
-            
+
             try
             {
                 SolveFor(sqr, solution);
                 if (Solve())
                     return true;
             }
-            catch (InvalidInputException e)
+            catch (InvalidInputException)
             {
                 RevertChanges(StackCount);
                 return false;
             }
+            
             RevertChanges(StackCount);
             return false;
         }
@@ -224,11 +244,11 @@ namespace SudokuNator5000
                 for (int j = 0; j < size; j++)
                 {
                     if (squares[i, j].GetValue() != 0) continue;
-                    int block_row = i / block_size, block_col = j / block_size;
+                    int block_row = i - i%block_size, block_col = j - j%block_size;
 
                     //Handle block
-                    for (int r = block_row * block_size; r < block_row + block_size; r++)
-                        for (int c = block_col * block_size; c < block_col + block_size; c++)
+                    for (int r = block_row; r < block_row + block_size; r++)
+                        for (int c = block_col; c < block_col + block_size; c++)
                         {
                             squares[i, j].CheckOff(squares[r, c].GetValue());
                             squares[r,c].GetValue();
@@ -281,10 +301,10 @@ namespace SudokuNator5000
             }
             //Handle block
             int block_size = (int)Math.Sqrt(size);
-            int block_row = row / block_size, block_col = col / block_size;
-            for (int i = block_row*block_size; i < block_row + block_size; i++)
+            int block_row = row -row%block_size, block_col = col -col%block_size;
+            for (int i = block_row; i < block_row + block_size; i++)
             {
-                for (int j = block_col*block_size; j < block_col + block_size; j++)
+                for (int j = block_col; j < block_col + block_size; j++)
                 {
                     if ((i, j) != (row, col))
                         if (squares[i, j].CheckOff(value))
