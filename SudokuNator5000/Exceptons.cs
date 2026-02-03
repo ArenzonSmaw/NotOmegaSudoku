@@ -16,5 +16,18 @@ namespace SudokuNator5000
         public InvalidInputException(string message) : base(message) { }
     }
 
+    public class InvalidCharacterException : InvalidInputException
+    {
+        public InvalidCharacterException(string message) : base(message) { }
+    }
 
+    public class WrongSolutionException : InvalidInputException
+    {
+        public WrongSolutionException(string message) : base(message) { }
+    }
+
+    public class UnsolvableBoardException : InvalidInputException
+    {
+        public UnsolvableBoardException(string message) : base(message) { }
+    }
 }

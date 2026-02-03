@@ -11,6 +11,18 @@ namespace SudokuNator5000
         private int value;
         private HashSet<int> notes; // possible solutions for the square
         private (int, int) coords;
+
+        public Square(char value)
+        {
+            if (value >= '0' && value <= '9')
+                this.value = (int)(value - '0');
+            else if ((value >= 'A' && value <= 'Z'))
+                this.value = (int)(value + 10 - (int)'A');
+            else if ((value >= 'a' && value <= 'z'))
+                this.value = (int)(value + 10 - (int)'a');
+            else
+                throw new InvalidInputException("Square value must be a digit or a letter");
+        }
         public Square(int value)
         {
             this.value = value;
@@ -55,6 +67,17 @@ namespace SudokuNator5000
         {
             notes.Add(value);
             value = oldVal;
+        }
+
+        public override string ToString()
+        {
+            string str = "";
+            if (value > 9)
+                str += (char)(value-10 + 'A');
+            else
+                str += (char)(value + '0');
+
+            return str;
         }
     }
 }
