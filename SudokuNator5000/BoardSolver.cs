@@ -199,6 +199,7 @@ namespace SudokuNator5000
             catch (InvalidInputException)
             {
                 RevertChanges(moveCount);
+                board.PrintBoard();
                 return false;
             }
             
