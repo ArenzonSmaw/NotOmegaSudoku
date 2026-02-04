@@ -11,6 +11,7 @@
 *.db
 *.vsidx
 *.suo
+*/v17.suo
 *.json
 
 # Build results
