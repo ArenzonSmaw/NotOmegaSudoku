@@ -8,52 +8,15 @@ using System.Threading.Tasks;
 
 namespace SudokuNator5000
 {
-    internal class Program
+    public class Program
     {
         static void Main(string[] args)
         {
-            Stopwatch sw = new Stopwatch();
-            /*int[,] sqrs = { {1, 2, 3, 4 },
-                            {2, 3, 4, 1 },
-                            {3, 4, 1, 2 },
-                            {4, 1, 2, 3 } };
-            Board brd = new Board(4);
-            brd.LoadBoard(sqrs);
-
+            int[,] mat = StrToMat("500090106103005092060020030001000009050000300006007001000870000002000600900200005");
+            Board brd = new Board(9);
+            brd.LoadBoard(mat);
+            brd.Solve();
             brd.PrintBoard();
-
-            Console.WriteLine(brd.Solve());
-
-            brd.PrintBoard();*/
-
-            Board brd2 = new Board(9);
-            int[,] sqrs2 = // WRONG!
-            {
-                { 3, 0, 0, 0, 4, 9, 0, 0, 0 },
-    { 0, 0, 0, 6, 0, 0, 5, 0, 1 },
-    { 7, 5, 2, 0, 0, 1, 0, 0, 0 },
-    { 0, 0, 1, 0, 0, 0, 7, 0, 0 },
-    { 5, 0, 0, 3, 9, 6, 0, 0, 0 },
-    { 0, 0, 8, 1, 5, 0, 0, 9, 6 },
-    { 0, 0, 3, 0, 1, 0, 0, 6, 0 },
-    { 0, 0, 4, 0, 0, 0, 1, 0, 0 },
-    { 0, 0, 0, 0, 2, 8, 0, 0, 0 }
-            };
-            brd2.LoadBoard(sqrs2);
-            brd2.PrintBoard();
-            sw = Stopwatch.StartNew();
-            try
-            {
-                Console.WriteLine(brd2.Solve());
-            }
-            catch (UnsolvableBoardException e)
-            {
-                Console.WriteLine(e.Message);
-            }
-            sw.Stop();
-            brd2.PrintBoard();
-            Console.WriteLine(sw.Elapsed);
-            //SudokuPlay();
         }
 
         public static void SudokuPlay()
@@ -89,13 +52,23 @@ namespace SudokuNator5000
 
         public static int[,] GetUserInput()
         {
-            int[,] ret;
+            //gets input from user and returns a matrix representing the input
+
             string input;
             input = Console.ReadLine();
+
+            return StrToMat(input);
+        }
+        public static int[,] StrToMat(string input)
+        {
+            //gets string representing the input mat
+            //returns an int matrix representing the input
+
+            int[,] ret;
             int length = input.Length;
             int size = (int)Math.Sqrt(length);
             if (length % size != 0)
-                throw new InvalidInputException("Board dimentions are not square");
+                throw new InvalidBoardSizesException("Board dimentions are not square");
             ret = new int[size, size];
 
             for (int i = 0; i < size; i++)
@@ -110,13 +83,15 @@ namespace SudokuNator5000
 
         public static int CharToInt(char c)
         {
+            //translates ascii values of the input to numeric values
+
             if (c >= '0' && c <= '9')
                 return c - '0';
             if (c >= 'A' && c <= 'Z')
                 return c - 'A';
             if (c >= 'a' && c <= 'z')
                 return c - 'a';
-            else throw new InvalidInputException("Square value must be a digit or a letter.");
+            else throw new InvalidCharacterException("Square value must be a digit or a letter.");
         }
     }
 }

@@ -3,27 +3,33 @@
   "WorkspaceRootPath": "C:\\Users\\arenz\\source\\repos\\OmegaSudoku\\NotOmegaSudoku\\SudokuNator5000\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{3E8839B4-714B-44F6-BFCC-AE595DDCCDA5}|SudokuNator5000.csproj|c:\\users\\arenz\\source\\repos\\omegasudoku\\notomegasudoku\\sudokunator5000\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3E8839B4-714B-44F6-BFCC-AE595DDCCDA5}|SudokuNator5000.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{3E8839B4-714B-44F6-BFCC-AE595DDCCDA5}|SudokuNator5000.csproj|C:\\Users\\arenz\\source\\repos\\OmegaSudoku\\NotOmegaSudoku\\SudokuNator5000\\boardsolver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3E8839B4-714B-44F6-BFCC-AE595DDCCDA5}|SudokuNator5000.csproj|solutionrelative:boardsolver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3E8839B4-714B-44F6-BFCC-AE595DDCCDA5}|SudokuNator5000.csproj|C:\\Users\\arenz\\source\\repos\\OmegaSudoku\\NotOmegaSudoku\\SudokuNator5000\\square.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3E8839B4-714B-44F6-BFCC-AE595DDCCDA5}|SudokuNator5000.csproj|solutionrelative:square.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{3E8839B4-714B-44F6-BFCC-AE595DDCCDA5}|SudokuNator5000.csproj|C:\\Users\\arenz\\source\\repos\\OmegaSudoku\\NotOmegaSudoku\\SudokuNator5000\\board.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3E8839B4-714B-44F6-BFCC-AE595DDCCDA5}|SudokuNator5000.csproj|solutionrelative:board.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{3E8839B4-714B-44F6-BFCC-AE595DDCCDA5}|SudokuNator5000.csproj|c:\\users\\arenz\\source\\repos\\omegasudoku\\notomegasudoku\\sudokunator5000\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3E8839B4-714B-44F6-BFCC-AE595DDCCDA5}|SudokuNator5000.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9A1E5678-2E67-44AD-9F70-3B1935D1149B}|..\\SudokuTester\\SudokuTester.csproj|c:\\users\\arenz\\source\\repos\\omegasudoku\\notomegasudoku\\sudokutester\\validtest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9A1E5678-2E67-44AD-9F70-3B1935D1149B}|..\\SudokuTester\\SudokuTester.csproj|c:\\users\\arenz\\source\\repos\\omegasudoku\\notomegasudoku\\sudokutester\\invalidvaluetest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9A1E5678-2E67-44AD-9F70-3B1935D1149B}|..\\SudokuTester\\SudokuTester.csproj|c:\\users\\arenz\\source\\repos\\omegasudoku\\notomegasudoku\\sudokutester\\invalidinputtest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{3E8839B4-714B-44F6-BFCC-AE595DDCCDA5}|SudokuNator5000.csproj|C:\\Users\\arenz\\source\\repos\\OmegaSudoku\\NotOmegaSudoku\\SudokuNator5000\\exceptons.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3E8839B4-714B-44F6-BFCC-AE595DDCCDA5}|SudokuNator5000.csproj|solutionrelative:exceptons.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{9A1E5678-2E67-44AD-9F70-3B1935D1149B}|..\\SudokuTester\\SudokuTester.csproj|c:\\users\\arenz\\source\\repos\\omegasudoku\\notomegasudoku\\sudokutester\\unittest1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3E8839B4-714B-44F6-BFCC-AE595DDCCDA5}|SudokuNator5000.csproj|C:\\Users\\arenz\\source\\repos\\OmegaSudoku\\NotOmegaSudoku\\SudokuNator5000\\square.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3E8839B4-714B-44F6-BFCC-AE595DDCCDA5}|SudokuNator5000.csproj|solutionrelative:square.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{3E8839B4-714B-44F6-BFCC-AE595DDCCDA5}|SudokuNator5000.csproj|C:\\Users\\arenz\\source\\repos\\OmegaSudoku\\NotOmegaSudoku\\SudokuNator5000\\move.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -40,21 +46,51 @@
           "SelectedChildIndex": 6,
           "Children": [
             {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "UnitTest1.cs",
-              "DocumentMoniker": "C:\\Users\\arenz\\source\\repos\\OmegaSudoku\\NotOmegaSudoku\\SudokuTester\\UnitTest1.cs",
-              "RelativeDocumentMoniker": "..\\SudokuTester\\UnitTest1.cs",
-              "ToolTip": "C:\\Users\\arenz\\source\\repos\\OmegaSudoku\\NotOmegaSudoku\\SudokuTester\\UnitTest1.cs",
-              "RelativeToolTip": "..\\SudokuTester\\UnitTest1.cs",
-              "ViewState": "AgIAACAAAAAAAAAAAAAswDoAAAAjAAAAAAAAAA==",
+              "DocumentIndex": 5,
+              "Title": "InvalidValueTest.cs",
+              "DocumentMoniker": "C:\\Users\\arenz\\source\\repos\\OmegaSudoku\\NotOmegaSudoku\\SudokuTester\\InvalidValueTest.cs",
+              "RelativeDocumentMoniker": "..\\SudokuTester\\InvalidValueTest.cs",
+              "ToolTip": "C:\\Users\\arenz\\source\\repos\\OmegaSudoku\\NotOmegaSudoku\\SudokuTester\\InvalidValueTest.cs",
+              "RelativeToolTip": "..\\SudokuTester\\InvalidValueTest.cs",
+              "ViewState": "AgIAACgAAAAAAAAAAAAgwDgAAABFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-03T09:40:58.389Z",
+              "WhenOpened": "2026-02-03T22:41:48.69Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 6,
+              "Title": "InvalidInputTest.cs",
+              "DocumentMoniker": "C:\\Users\\arenz\\source\\repos\\OmegaSudoku\\NotOmegaSudoku\\SudokuTester\\InvalidInputTest.cs",
+              "RelativeDocumentMoniker": "..\\SudokuTester\\InvalidInputTest.cs",
+              "ToolTip": "C:\\Users\\arenz\\source\\repos\\OmegaSudoku\\NotOmegaSudoku\\SudokuTester\\InvalidInputTest.cs",
+              "RelativeToolTip": "..\\SudokuTester\\InvalidInputTest.cs",
+              "ViewState": "AgIAAB8AAAAAAAAAAAAlwCYAAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-03T22:36:43.544Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ValidTest.cs",
+              "DocumentMoniker": "C:\\Users\\arenz\\source\\repos\\OmegaSudoku\\NotOmegaSudoku\\SudokuTester\\ValidTest.cs",
+              "RelativeDocumentMoniker": "..\\SudokuTester\\ValidTest.cs",
+              "ToolTip": "C:\\Users\\arenz\\source\\repos\\OmegaSudoku\\NotOmegaSudoku\\SudokuTester\\ValidTest.cs",
+              "RelativeToolTip": "..\\SudokuTester\\ValidTest.cs",
+              "ViewState": "AgIAAFIAAAAAAAAAAAAAwGUAAAB/AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-03T22:29:39.129Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
               "Title": "Move.cs",
               "DocumentMoniker": "C:\\Users\\arenz\\source\\repos\\OmegaSudoku\\NotOmegaSudoku\\SudokuNator5000\\Move.cs",
               "RelativeDocumentMoniker": "Move.cs",
@@ -66,39 +102,39 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 7,
               "Title": "Exceptons.cs",
               "DocumentMoniker": "C:\\Users\\arenz\\source\\repos\\OmegaSudoku\\NotOmegaSudoku\\SudokuNator5000\\Exceptons.cs",
               "RelativeDocumentMoniker": "Exceptons.cs",
               "ToolTip": "C:\\Users\\arenz\\source\\repos\\OmegaSudoku\\NotOmegaSudoku\\SudokuNator5000\\Exceptons.cs",
               "RelativeToolTip": "Exceptons.cs",
-              "ViewState": "AgIAABMAAAAAAAAAAAAkwB0AAAAFAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAA3AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-02-02T21:15:42.513Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "BoardSolver.cs",
               "DocumentMoniker": "C:\\Users\\arenz\\source\\repos\\OmegaSudoku\\NotOmegaSudoku\\SudokuNator5000\\BoardSolver.cs",
               "RelativeDocumentMoniker": "BoardSolver.cs",
-              "ToolTip": "C:\\Users\\arenz\\source\\repos\\OmegaSudoku\\NotOmegaSudoku\\SudokuNator5000\\BoardSolver.cs",
-              "RelativeToolTip": "BoardSolver.cs",
-              "ViewState": "AgIAADkAAAAAAAAAAAAQwEMAAAAgAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\arenz\\source\\repos\\OmegaSudoku\\NotOmegaSudoku\\SudokuNator5000\\BoardSolver.cs*",
+              "RelativeToolTip": "BoardSolver.cs*",
+              "ViewState": "AgIAALcAAAAAAAAAAAAowMIAAAAjAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-01-30T11:07:55.598Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 1,
               "Title": "Square.cs",
               "DocumentMoniker": "C:\\Users\\arenz\\source\\repos\\OmegaSudoku\\NotOmegaSudoku\\SudokuNator5000\\Square.cs",
               "RelativeDocumentMoniker": "Square.cs",
               "ToolTip": "C:\\Users\\arenz\\source\\repos\\OmegaSudoku\\NotOmegaSudoku\\SudokuNator5000\\Square.cs",
               "RelativeToolTip": "Square.cs",
-              "ViewState": "AgIAAD0AAAAAAAAAAADwv0sAAAAuAAAAAAAAAA==",
+              "ViewState": "AgIAADkAAAAAAAAAAAA+wEEAAAAUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-01-20T21:42:51.374Z",
               "EditorCaption": ""
@@ -111,20 +147,20 @@
               "RelativeDocumentMoniker": "Board.cs",
               "ToolTip": "C:\\Users\\arenz\\source\\repos\\OmegaSudoku\\NotOmegaSudoku\\SudokuNator5000\\Board.cs",
               "RelativeToolTip": "Board.cs",
-              "ViewState": "AgIAAB4AAAAAAAAAAAAqwKIAAABRAAAAAAAAAA==",
+              "ViewState": "AgIAAKgAAAAAAAAAAAAAwLQAAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-01-20T21:36:40.149Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 3,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\arenz\\source\\repos\\OmegaSudoku\\NotOmegaSudoku\\SudokuNator5000\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "C:\\Users\\arenz\\source\\repos\\OmegaSudoku\\NotOmegaSudoku\\SudokuNator5000\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAA0AAAAAAAAAAAAQwDAAAAAMAAAAAAAAAA==",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAiwBEAAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-01-20T21:33:40.221Z",
               "EditorCaption": ""

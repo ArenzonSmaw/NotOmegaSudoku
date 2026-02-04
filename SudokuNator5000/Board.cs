@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SudokuNator5000
 {
-    internal class Board
+    public class Board
     {
         private int size, root_size; // size of the board side, square root of that size
         private Square[,] board_mat;
@@ -15,7 +15,7 @@ namespace SudokuNator5000
         {
             this.root_size = (int)Math.Sqrt(size);
             if ((size % root_size) != 0)
-                throw new InvalidInputException($"Board size must be squared and not {size}.");
+                throw new InvalidBoardSizesException($"Board size must be squared and not {size}.");
             this.size = size;
             this.board_mat = new Square[size, size];
         }
@@ -52,7 +52,7 @@ namespace SudokuNator5000
             //gets: matrix of ints representing the sudoku board
             //loads the board onto the object and updates notes on each square
             if (numMatrix == null || numMatrix.GetLength(0) < size || numMatrix.GetLength(1) < size)
-                throw new InvalidInputException("matrix size does not fit the board");
+                throw new InvalidBoardSizesException("matrix size does not fit the board");
             for (int i = 0; i < size; i++)
             {
                 for (int j = 0; j < size; j++)
@@ -60,7 +60,7 @@ namespace SudokuNator5000
                     if (numMatrix[i, j] != 0)
                     {
                         if (numMatrix[i, j] > size)
-                            throw new InvalidInputException($"Maximal value for square in {size} sized matrix is: {size}.");
+                            throw new InvalidCharacterException($"Maximal value for square in {size} sized matrix is: {size}.");
                         else if (numMatrix[i, j] < 0)
                             throw new InvalidCharacterException($"Square value cannot be less than 0.");
                         this.board_mat[i, j] = new Square(numMatrix[i, j]);
@@ -135,7 +135,7 @@ namespace SudokuNator5000
                 Console.Write("-");
             Console.WriteLine("\n");
         }
-        public void CheckValid()
+        public bool CheckValid()
         {
             //checks all blocks, rows and columns. throws an invalid input exception if board is invalid.
             HashSet<int> existing;
@@ -172,12 +172,25 @@ namespace SudokuNator5000
                     }
                 }
             }
+            return true;
         }
         public bool Solve()
         {
             //calls solver method
             BoardSolver solver = new BoardSolver(this);
             return solver.Solve();
+        }
+        public override string ToString()
+        {
+            string str = "";
+            for (int i = 0; i < size; i++)
+            {
+                for (int j = 0; j < size; j++)
+                {
+                    str += board_mat[i, j].GetValue();
+                }
+            }
+            return str;
         }
     }
 }

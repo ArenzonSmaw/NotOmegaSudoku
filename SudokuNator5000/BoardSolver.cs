@@ -49,7 +49,14 @@ namespace SudokuNator5000
         {
             //solves board first by marking obvious solutions, then guessing a square with a minimal note count
 
-            MakeNotes();
+            try
+            {
+                MakeNotes();
+            }
+            catch (InvalidInputException)
+            {
+                throw new UnsolvableBoardException("Unsolvable Board: the board has no solution.");
+            }
             bool didChange = true;
             Square sqr;
             while(didChange)
@@ -170,6 +177,7 @@ namespace SudokuNator5000
             Move mv = new Move(co_ordinatot.Item1, co_ordinatot.Item2, sqr.GetValue(), solution);
             sqr.SolveFor(solution);
             UpdateNotes(co_ordinatot.Item1, co_ordinatot.Item2, solution, mv);
+            moveStack.Push(mv);
             //board.printBoard();
         }
 
@@ -179,26 +187,26 @@ namespace SudokuNator5000
             //returns: true if board is solvable for this guess and false otherwise
 
             (int, int) co_ordinatot = sqr.Coordinates;
-            int StackCount = moveStack.Count();
-            moveStack.Push(new Move(co_ordinatot.Item1, co_ordinatot.Item2, sqr.GetValue(), solution));
+            int moveCount = moveStack.Count();
 
             try
             {
                 SolveFor(sqr, solution);
+                board.PrintBoard();
                 if (Solve())
                     return true;
             }
             catch (InvalidInputException)
             {
-                RevertChanges(StackCount);
+                RevertChanges(moveCount);
                 return false;
             }
             
-            RevertChanges(StackCount);
+            RevertChanges(moveCount);
             return false;
         }
 
-        public void RevertChanges(int sCount)
+        public void RevertChanges(int moveCount)
         {
             //gets a "checkpoint" from the moves stack and returns to that point
             //pops past moves and reverses them
@@ -206,7 +214,7 @@ namespace SudokuNator5000
             Square sqr;
             Move mv;
             HashSet<(int, int)> affected;
-            while(moveStack.Count > sCount) 
+            while(moveStack.Count() > moveCount) 
             {
                 mv = moveStack.Pop();
                 sqr = squares[mv.Row, mv.Col];

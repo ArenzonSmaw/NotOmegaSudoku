@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SudokuNator5000
 {
-    internal class Square
+    public class Square
     {
         private int value;
         private HashSet<int> notes; // possible solutions for the square
