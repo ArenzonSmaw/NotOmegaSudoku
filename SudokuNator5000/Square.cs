@@ -45,10 +45,13 @@ namespace SudokuNator5000
         {
             if (this.value == 0)
             {
-                notes.Remove(value);
-                if (notes.Count() == 0)
-                    throw new InvalidInputException($"hold up how does this square have no possibilities? {Coordinates}");
-                return true;
+                if (notes.Contains(value))
+                {
+                    notes.Remove(value);
+                    if (notes.Count() == 0)
+                        throw new InvalidInputException($"hold up how does this square have no possibilities? {Coordinates}");
+                    return true;
+                }
             }
             return false;
         }

@@ -29,5 +29,6 @@ namespace SudokuNator5000
     public class UnsolvableBoardException : InvalidInputException
     {
         public UnsolvableBoardException(string message) : base(message) { }
+        public UnsolvableBoardException() : base("Unsolvable Board: A solution for the given board hasn't been found.") { }
     }
 }

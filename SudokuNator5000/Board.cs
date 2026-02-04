@@ -6,45 +6,18 @@ using System.Threading.Tasks;
 
 namespace SudokuNator5000
 {
-    public class Board
+    public class Board 
     {
         private int size, root_size; // size of the board side, square root of that size
         private Square[,] board_mat;
 
-        public Board (int size)
+        public Board (int size) 
         {
             this.root_size = (int)Math.Sqrt(size);
             if ((size % root_size) != 0)
-                throw new InvalidBoardSizesException($"Board size must be squared and not {size}.");
+                throw new InvalidBoardSizesException($"Invalid Board Sizes: Board size must be squared, got: {size}.");
             this.size = size;
             this.board_mat = new Square[size, size];
-        }
-
-        private HashSet<int> GetExistingValues(int row, int col)
-        {
-            HashSet<int> set = new HashSet<int>();
-            Square temp;
-            int block_col = col - col % root_size;
-            int block_row = row - row % root_size;
-            for (int i = 0; i < root_size; i++) //Check the current block
-            { 
-                for (int j = 0; j < root_size; j++)
-                {
-                    temp = board_mat[block_row+i, block_col+j];
-                    if (temp != null && temp.GetValue() > 0)
-                        set.Add(temp.GetValue());
-                }
-            }
-            for(int i = 0; i < size; i++) // Check row and column
-            {
-                temp = board_mat[row, i];
-                if (temp != null && temp.GetValue() > 0)
-                    set.Add(temp.GetValue());
-                temp = board_mat[i, col];
-                if (temp != null && temp.GetValue() > 0)
-                    set.Add(temp.GetValue());
-            }
-            return set;
         }
 
         public void LoadBoard(int[,] numMatrix)
@@ -52,7 +25,7 @@ namespace SudokuNator5000
             //gets: matrix of ints representing the sudoku board
             //loads the board onto the object and updates notes on each square
             if (numMatrix == null || numMatrix.GetLength(0) < size || numMatrix.GetLength(1) < size)
-                throw new InvalidBoardSizesException("matrix size does not fit the board");
+                throw new InvalidBoardSizesException("Invalid Board Sizes: input size does not fit the board size.");
             for (int i = 0; i < size; i++)
             {
                 for (int j = 0; j < size; j++)
@@ -60,9 +33,9 @@ namespace SudokuNator5000
                     if (numMatrix[i, j] != 0)
                     {
                         if (numMatrix[i, j] > size)
-                            throw new InvalidCharacterException($"Maximal value for square in {size} sized matrix is: {size}.");
+                            throw new InvalidCharacterException($"Invalid Character: Maximal value for square in {size} sized matrix is: {size}.");
                         else if (numMatrix[i, j] < 0)
-                            throw new InvalidCharacterException($"Square value cannot be less than 0.");
+                            throw new InvalidCharacterException($"Invalid Character: Value cannot be less than 0.");
                         this.board_mat[i, j] = new Square(numMatrix[i, j]);
                     }
                     else

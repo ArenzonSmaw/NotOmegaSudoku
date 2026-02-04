@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +24,7 @@ namespace SudokuNator5000
             moveStack = new Stack<Move>();
         }
 
+        public Board GetBoard() => board;
         public bool IsSolved()
         {
             bool isSolved = true;
@@ -176,7 +178,14 @@ namespace SudokuNator5000
 
             Move mv = new Move(co_ordinatot.Item1, co_ordinatot.Item2, sqr.GetValue(), solution);
             sqr.SolveFor(solution);
-            UpdateNotes(co_ordinatot.Item1, co_ordinatot.Item2, solution, mv);
+            try
+            {
+                UpdateNotes(co_ordinatot.Item1, co_ordinatot.Item2, solution, mv);
+            }
+            catch (Exception)
+            {
+                throw new UnsolvableBoardException();
+            }
             moveStack.Push(mv);
             //board.printBoard();
         }
@@ -186,24 +195,27 @@ namespace SudokuNator5000
             //gets: square object and possible solution
             //returns: true if board is solvable for this guess and false otherwise
 
-            (int, int) co_ordinatot = sqr.Coordinates;
-            int moveCount = moveStack.Count();
+            /*(int, int) co_ordinatot = sqr.Coordinates;
+            int moveCount = moveStack.Count();*/
+            BoardSolver solver = new BoardSolver(board.Clone());
 
             try
             {
                 SolveFor(sqr, solution);
-                board.PrintBoard();
+                Console.WriteLine(board);
                 if (Solve())
+                {
+                    this.board = solver.GetBoard();
                     return true;
+                }
             }
-            catch (InvalidInputException)
+            catch (UnsolvableBoardException)
             {
-                RevertChanges(moveCount);
-                board.PrintBoard();
+                //RevertChanges(moveCount);
                 return false;
             }
             
-            RevertChanges(moveCount);
+            //RevertChanges(moveCount);
             return false;
         }
 
@@ -278,6 +290,7 @@ namespace SudokuNator5000
             //updaets row column and block of the square so that the new value is checked off
 
             Square sqr;
+
             for (int i = 0; i < size; i++)
             {
                 // Handle Row
@@ -287,11 +300,11 @@ namespace SudokuNator5000
 
                     if (sqr.GetValue() == 0)
                     {
-                        if(sqr.CheckOff(value))
+                        if (sqr.CheckOff(value))
                             mv.AddAffected(row, i);
                         if (sqr.GetNotes().Count() == 1)
-                            SolveFor(sqr, sqr.GetNotes().ToArray()[0]);
-                        
+                            SolveFor(sqr, sqr.GetNotes().First());
+
                     }
                 }
                 // Handle Column
@@ -300,24 +313,31 @@ namespace SudokuNator5000
                     sqr = squares[i, col];
                     if (sqr.GetValue() == 0)
                     {
-                        if(sqr.CheckOff(value))
+                        if (sqr.CheckOff(value))
                             mv.AddAffected(i, col);
                         if (sqr.GetNotes().Count() == 1)
-                            SolveFor(sqr, sqr.GetNotes().ToArray()[0]);
+                            SolveFor(sqr, sqr.GetNotes().First());
 
                     }
                 }
             }
+
+
             //Handle block
             int block_size = (int)Math.Sqrt(size);
-            int block_row = row -row%block_size, block_col = col -col%block_size;
+            int block_row = row - row % block_size, block_col = col - col % block_size;
             for (int i = block_row; i < block_row + block_size; i++)
             {
                 for (int j = block_col; j < block_col + block_size; j++)
                 {
-                    if ((i, j) != (row, col))
-                        if (squares[i, j].CheckOff(value))
+                    sqr = squares[i, j];
+                    if (sqr.GetValue() == 0 && (i, j) != (row, col))
+                    {
+                        if (sqr.CheckOff(value))
                             mv.AddAffected(i, j);
+                        if (sqr.GetNotes().Count() == 1)
+                            SolveFor(sqr, sqr.GetNotes().First());
+                    }
                 }
             }
         }
