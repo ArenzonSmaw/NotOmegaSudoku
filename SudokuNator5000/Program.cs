@@ -12,22 +12,23 @@ namespace SudokuNator5000
     {
         static void Main(string[] args)
         {
-            int[,] mat = StrToMat("500090106103005092060020030001000009050000300006007001000870000002000600900200005");
+            /*int[,] mat = StrToMat("500090106103005092060020030001000009050000300006007001000870000002000600900200005");
             Board brd = new Board(9);
             brd.LoadBoard(mat);
             brd.Solve();
-            brd.PrintBoard();
+            brd.PrintBoard();*/
+            SudokuPlay();
         }
 
         public static void SudokuPlay()
         {
             while (true) {
-                var sw = Stopwatch.StartNew();
                 try
                 {
+                    var sw = Stopwatch.StartNew();
                     Board brd;
                     Console.Write("Please Enter a sudoku board:> ");
-                    int[,] input = GetUserInput();
+                    int[,] input = GetUserInput(16); // for 9x9 board. to disable the limit change the 9 to 0;
                     brd = new Board(input.GetLength(0));
                     brd.LoadBoard(input);
                     Console.WriteLine("Board Entered:");
@@ -50,13 +51,15 @@ namespace SudokuNator5000
             }
         }
 
-        public static int[,] GetUserInput()
+        public static int[,] GetUserInput(int size)
         {
-            //gets input from user and returns a matrix representing the input
+            //gets expected input size and input from user and returns a matrix representing the input
+            //if no input size is expected pass 0;
 
             string input;
             input = Console.ReadLine();
-
+            if (size != 0 && input.Length != Math.Pow(size, 2))
+                throw new InvalidCharacterException($"Expected {Math.Pow(size, 2)} long input, got {input.Length} length instead.");
             return StrToMat(input);
         }
         public static int[,] StrToMat(string input)
@@ -86,12 +89,12 @@ namespace SudokuNator5000
             //translates ascii values of the input to numeric values
 
             if (c >= '0' && c <= '9')
-                return c - '0';
+                return (int)(c - '0');
             if (c >= 'A' && c <= 'Z')
-                return c - 'A';
+                return (int)(c - 'A') + 10;
             if (c >= 'a' && c <= 'z')
-                return c - 'a';
-            else throw new InvalidCharacterException("Square value must be a digit or a letter.");
+                return (int)(c - 'a') + 10;
+            else throw new InvalidCharacterException("Value must be a digit or a letter.");
         }
     }
 }
