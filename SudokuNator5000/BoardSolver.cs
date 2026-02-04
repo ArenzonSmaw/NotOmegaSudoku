@@ -176,17 +176,17 @@ namespace SudokuNator5000
                 throw new InvalidInputException($"Solution {solution} for square {sqr.Coordinates} is impossible.");
             (int, int) co_ordinatot = sqr.Coordinates;
 
-            Move mv = new Move(co_ordinatot.Item1, co_ordinatot.Item2, sqr.GetValue(), solution);
+            SolvingMove sMove = new SolvingMove(co_ordinatot.Item1, co_ordinatot.Item2, solution);
             sqr.SolveFor(solution);
             try
             {
-                UpdateNotes(co_ordinatot.Item1, co_ordinatot.Item2, solution, mv);
+                UpdateNotes(co_ordinatot.Item1, co_ordinatot.Item2, solution, sMove);
             }
             catch (Exception)
             {
                 throw new UnsolvableBoardException();
             }
-            moveStack.Push(mv);
+            moveStack.Push(sMove);
             //board.printBoard();
         }
 
@@ -195,9 +195,8 @@ namespace SudokuNator5000
             //gets: square object and possible solution
             //returns: true if board is solvable for this guess and false otherwise
 
-            /*(int, int) co_ordinatot = sqr.Coordinates;
-            int moveCount = moveStack.Count();*/
-            BoardSolver solver = new BoardSolver(board.Clone());
+            (int, int) co_ordinatot = sqr.Coordinates;
+            int moveCount = moveStack.Count();
 
             try
             {
@@ -205,17 +204,16 @@ namespace SudokuNator5000
                 Console.WriteLine(board);
                 if (Solve())
                 {
-                    this.board = solver.GetBoard();
                     return true;
                 }
             }
             catch (UnsolvableBoardException)
             {
-                //RevertChanges(moveCount);
+                RevertChanges(moveCount);
                 return false;
             }
             
-            //RevertChanges(moveCount);
+            RevertChanges(moveCount);
             return false;
         }
 
@@ -226,20 +224,11 @@ namespace SudokuNator5000
 
             Square sqr;
             Move mv;
-            HashSet<(int, int)> affected;
             while(moveStack.Count() > moveCount) 
             {
                 mv = moveStack.Pop();
                 sqr = squares[mv.Row, mv.Col];
-                sqr.RevertValue(mv.OldVal);
-
-                affected = mv.AffectedSqrs;
-                while (affected.Count() > 0)
-                {
-                    (int, int) coords = affected.First();
-                    squares[coords.Item1, coords.Item2].RevertNotes(mv.OldVal);
-                    affected.Remove(coords);
-                }
+                sqr.RevertMove(mv);
             }
         }
 
@@ -301,7 +290,7 @@ namespace SudokuNator5000
                     if (sqr.GetValue() == 0)
                     {
                         if (sqr.CheckOff(value))
-                            mv.AddAffected(row, i);
+                            moveStack.Push(new CheckoffMove(row, i, value));
                         if (sqr.GetNotes().Count() == 1)
                             SolveFor(sqr, sqr.GetNotes().First());
 
@@ -314,7 +303,7 @@ namespace SudokuNator5000
                     if (sqr.GetValue() == 0)
                     {
                         if (sqr.CheckOff(value))
-                            mv.AddAffected(i, col);
+                            moveStack.Push(new CheckoffMove(i, col, value));
                         if (sqr.GetNotes().Count() == 1)
                             SolveFor(sqr, sqr.GetNotes().First());
 
@@ -334,7 +323,7 @@ namespace SudokuNator5000
                     if (sqr.GetValue() == 0 && (i, j) != (row, col))
                     {
                         if (sqr.CheckOff(value))
-                            mv.AddAffected(i, j);
+                            moveStack.Push(new CheckoffMove(i, j, value));
                         if (sqr.GetNotes().Count() == 1)
                             SolveFor(sqr, sqr.GetNotes().First());
                     }

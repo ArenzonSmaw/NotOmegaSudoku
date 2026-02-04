@@ -6,34 +6,39 @@ using System.Threading.Tasks;
 
 namespace SudokuNator5000
 {
-    internal class Move
+    public abstract class Move
     {
-        private int row, col, old_val, new_value;
-        HashSet<(int, int)> affectedSquares;
-        public Move (int row, int col, int old_val, int new_value)
+        private int row, col;
+        public Move (int row, int col)
         {
             this.row = row;
             this.col = col;
-            this.old_val = old_val;
-            this.new_value = new_value;
-            affectedSquares = new HashSet<(int, int)> ();
         }
 
         public int Row { get { return row; } }
         public int Col { get { return col; } }
-        public int OldVal { get { return old_val; } }
-        public int NewVal { get { return new_value; } }
-        public HashSet<(int,int)> AffectedSqrs { get { return affectedSquares; }  }
-        public void AddAffected(int row, int col)
-        {
-            affectedSquares.Add((row, col));
-        }
-        
 
-        public void Revert(Square[,] squares)
-        {
-            squares[row, col].SolveFor(old_val);
-        }
+        public abstract int GetValue();
 
+    }
+
+    public class SolvingMove : Move
+    {
+        private int newVal;
+        public SolvingMove(int row, int col, int value) : base(row,col)
+        {
+            this.newVal = value;
+        }
+        public override int GetValue() => newVal;
+    }
+
+    public class CheckoffMove : Move
+    {
+        private int removed;
+        public CheckoffMove(int row, int col, int value) : base(row, col)
+        {
+            this.removed = value;
+        }
+        public override int GetValue() => removed;
     }
 }

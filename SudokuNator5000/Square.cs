@@ -60,16 +60,28 @@ namespace SudokuNator5000
 
         public HashSet<int> GetNotes() => notes;
         public (int, int) Coordinates { get { return coords; } }
+
+        public void RevertMove(Move move)
+        {
+            if (move.GetType() == typeof(SolvingMove))
+            {
+                RevertValue();
+            }
+            else if (move.GetType() == typeof(CheckoffMove))
+            {
+                RevertNotes(move.GetValue());
+            }
+        }
         public void SolveFor(int newValue)
         {
             if (!notes.Contains(newValue))
                 throw new InvalidInputException($"solution {newValue} for square {Coordinates} is wrong.");
             value = newValue;
         }
-        public void RevertValue (int oldVal)
+        public void RevertValue ()
         {
             notes.Add(value);
-            value = oldVal;
+            value = 0;
         }
         public void RevertNotes (int note)
         {
