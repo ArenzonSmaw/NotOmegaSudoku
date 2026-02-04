@@ -218,13 +218,13 @@ namespace SudokuNator5000
             {
                 mv = moveStack.Pop();
                 sqr = squares[mv.Row, mv.Col];
-                sqr.Revert(mv.OldVal);
+                sqr.RevertValue(mv.OldVal);
 
                 affected = mv.AffectedSqrs;
                 while (affected.Count() > 0)
                 {
                     (int, int) coords = affected.First();
-                    squares[coords.Item1, coords.Item2].Revert(mv.OldVal);
+                    squares[coords.Item1, coords.Item2].RevertNotes(mv.OldVal);
                     affected.Remove(coords);
                 }
             }

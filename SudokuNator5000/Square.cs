@@ -63,10 +63,14 @@ namespace SudokuNator5000
                 throw new InvalidInputException($"solution {newValue} for square {Coordinates} is wrong.");
             value = newValue;
         }
-        public void Revert (int oldVal)
+        public void RevertValue (int oldVal)
         {
             notes.Add(value);
             value = oldVal;
+        }
+        public void RevertNotes (int note)
+        {
+            notes.Add(note);
         }
 
         public override string ToString()

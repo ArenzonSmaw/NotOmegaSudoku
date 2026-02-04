@@ -14,6 +14,8 @@ namespace SudokuNator5000
         {
             int[,] mat = StrToMat("500090106103005092060020030001000009050000300006007001000870000002000600900200005");
             Board brd = new Board(9);
+            //int[,] mat = StrToMat("0000000000000000");
+            //Board brd = new Board(4);
             brd.LoadBoard(mat);
             brd.Solve();
             brd.PrintBoard();
