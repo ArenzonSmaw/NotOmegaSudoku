@@ -41,6 +41,13 @@ namespace SudokuNator5000
             
             value = 0;
         }
+        public Square(Square other)
+        {
+            value = other.GetValue();
+            coords = other.coords;
+            notes = new HashSet<int>();
+            notes.UnionWith(other.notes);
+        }
         public bool CheckOff(int value)
         {
             if (this.value == 0)
@@ -61,33 +68,13 @@ namespace SudokuNator5000
         public HashSet<int> GetNotes() => notes;
         public (int, int) Coordinates { get { return coords; } }
 
-        public void RevertMove(Move move)
-        {
-            if (move.GetType() == typeof(SolvingMove))
-            {
-                RevertValue();
-            }
-            else if (move.GetType() == typeof(CheckoffMove))
-            {
-                RevertNotes(move.GetValue());
-            }
-        }
         public void SolveFor(int newValue)
         {
             if (!notes.Contains(newValue))
                 throw new InvalidInputException($"solution {newValue} for square {Coordinates} is wrong.");
             value = newValue;
         }
-        public void RevertValue ()
-        {
-            notes.Add(value);
-            value = 0;
-        }
-        public void RevertNotes (int note)
-        {
-            notes.Add(note);
-        }
-
+        
         public override string ToString()
         {
             string str = "";

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Remoting.Messaging;
@@ -96,6 +97,7 @@ namespace SudokuNator5000
                                 int solution = sqr.GetNotes().First();
                                 if (GuessFor(sqr, solution))
                                     return true;
+                                moveStack.Push(new Move(sqr));
                                 sqr.GetNotes().Remove(solution);
                             }
                             throw new UnsolvableBoardException("Unsolvable Board: The given board could not be solved...");
@@ -172,22 +174,23 @@ namespace SudokuNator5000
 
         public void SolveFor(Square sqr, int solution)
         {
+            //Solves square by updating the value and pushing the move into the move stack
             if (!sqr.GetNotes().Contains(solution)) 
                 throw new InvalidInputException($"Solution {solution} for square {sqr.Coordinates} is impossible.");
             (int, int) co_ordinatot = sqr.Coordinates;
 
-            SolvingMove sMove = new SolvingMove(co_ordinatot.Item1, co_ordinatot.Item2, solution);
+            Move Move = new Move(sqr);
+            int mCount = moveStack.Count();
             sqr.SolveFor(solution);
+            moveStack.Push(Move);
             try
             {
-                UpdateNotes(co_ordinatot.Item1, co_ordinatot.Item2, solution, sMove);
+                UpdateNotes(co_ordinatot.Item1, co_ordinatot.Item2, solution);
             }
             catch (Exception)
             {
                 throw new UnsolvableBoardException();
             }
-            moveStack.Push(sMove);
-            //board.printBoard();
         }
 
         public bool GuessFor(Square sqr, int solution)
@@ -206,14 +209,16 @@ namespace SudokuNator5000
                 {
                     return true;
                 }
+                else
+                {
+                    RevertChanges(moveCount);
+                }
             }
             catch (UnsolvableBoardException)
             {
                 RevertChanges(moveCount);
                 return false;
             }
-            
-            RevertChanges(moveCount);
             return false;
         }
 
@@ -227,8 +232,7 @@ namespace SudokuNator5000
             while(moveStack.Count() > moveCount) 
             {
                 mv = moveStack.Pop();
-                sqr = squares[mv.Row, mv.Col];
-                sqr.RevertMove(mv);
+                squares[mv.Row, mv.Col] = mv.GetOldSquare();
             }
         }
 
@@ -274,12 +278,13 @@ namespace SudokuNator5000
                 }
             }
         }
-        public void UpdateNotes(int row, int col, int value, Move mv) 
+        public void UpdateNotes(int row, int col, int value) 
         {
             //updaets row column and block of the square so that the new value is checked off
 
+            HashSet<Square> neighbors = new HashSet<Square>();
             Square sqr;
-
+            Move mv;
             for (int i = 0; i < size; i++)
             {
                 // Handle Row
@@ -289,10 +294,7 @@ namespace SudokuNator5000
 
                     if (sqr.GetValue() == 0)
                     {
-                        if (sqr.CheckOff(value))
-                            moveStack.Push(new CheckoffMove(row, i, value));
-                        if (sqr.GetNotes().Count() == 1)
-                            SolveFor(sqr, sqr.GetNotes().First());
+                        neighbors.Add(sqr);
 
                     }
                 }
@@ -302,10 +304,7 @@ namespace SudokuNator5000
                     sqr = squares[i, col];
                     if (sqr.GetValue() == 0)
                     {
-                        if (sqr.CheckOff(value))
-                            moveStack.Push(new CheckoffMove(i, col, value));
-                        if (sqr.GetNotes().Count() == 1)
-                            SolveFor(sqr, sqr.GetNotes().First());
+                        neighbors.Add(sqr);
 
                     }
                 }
@@ -322,13 +321,22 @@ namespace SudokuNator5000
                     sqr = squares[i, j];
                     if (sqr.GetValue() == 0 && (i, j) != (row, col))
                     {
-                        if (sqr.CheckOff(value))
-                            moveStack.Push(new CheckoffMove(i, j, value));
-                        if (sqr.GetNotes().Count() == 1)
-                            SolveFor(sqr, sqr.GetNotes().First());
+                        neighbors.Add(sqr);
                     }
                 }
             }
+
+            foreach (Square square in neighbors)
+            {
+                mv = new Move(square);
+                if (square.CheckOff(value))
+                    moveStack.Push(mv);
+            }
+            //foreach (Square square in neighbors)
+            //{
+            //    if (square.GetNotes().Count() == 1)
+            //        SolveFor(square, square.GetNotes().First());
+            //}
         }
     }
 }
