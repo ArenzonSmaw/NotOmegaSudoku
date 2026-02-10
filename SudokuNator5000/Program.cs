@@ -12,11 +12,12 @@ namespace SudokuNator5000
     {
         static void Main(string[] args)
         {
-            int[,] input = Program.StrToMat("130008900008000000790000080000600400003009070050020800001007090000500006000040200");
+            int[,] input = Program.StrToMat("000000000000000000000000000000000000000000000000000000000000000000000000000000000");
+
             string solution = "134768952528914367796352184819675423243189675657423819461237598382591746975846231";
             Board puzzle = new Board(9);
             puzzle.LoadBoard(input);
-            puzzle.Solve();
+            Console.WriteLine( puzzle.Solve());
         }
 
         public static void SudokuPlay()

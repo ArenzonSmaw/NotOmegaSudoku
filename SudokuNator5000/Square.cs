@@ -61,6 +61,14 @@ namespace SudokuNator5000
             }
             return false;
         }
+        public void ResetNotes(int boardSize)
+        {
+            notes = new HashSet<int>();
+            for (int i = 1; i <= boardSize; i++)
+            {
+                notes.Add(i);
+            }
+        }
 
         public int GetValue() => value;
 
@@ -72,6 +80,12 @@ namespace SudokuNator5000
             if (!notes.Contains(newValue))
                 throw new InvalidInputException($"solution {newValue} for square {Coordinates} is wrong.");
             value = newValue;
+        }
+        public void Unsolve()
+        {
+            if (notes == null) 
+                throw new InvalidInputException($"the square {Coordinates} cannot be unsolved.");
+            value = 0;
         }
         
         public override string ToString()
