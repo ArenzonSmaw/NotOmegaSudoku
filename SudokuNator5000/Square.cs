@@ -45,8 +45,7 @@ namespace SudokuNator5000
         {
             value = other.GetValue();
             coords = other.coords;
-            notes = new HashSet<int>();
-            notes.UnionWith(other.notes);
+            notes = new HashSet<int>(other.notes);
         }
         public bool CheckOff(int value)
         {
