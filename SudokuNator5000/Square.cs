@@ -41,34 +41,53 @@ namespace SudokuNator5000
             
             value = 0;
         }
+        public Square(Square other)
+        {
+            value = other.GetValue();
+            coords = other.coords;
+            notes = new HashSet<int>(other.notes);
+        }
         public bool CheckOff(int value)
         {
             if (this.value == 0)
             {
-                notes.Remove(value);
-                if (notes.Count() == 0)
-                    throw new InvalidInputException($"hold up how does this square have no possibilities? {Coordinates}");
-                return true;
+                if (notes.Contains(value))
+                {
+                    notes.Remove(value);
+                    if (notes.Count() == 0)
+                        throw new InvalidInputException($"hold up how does this square have no possibilities? {Coordinates}");
+                    return true;
+                }
             }
             return false;
+        }
+        public void ResetNotes(int boardSize)
+        {
+            notes = new HashSet<int>();
+            for (int i = 1; i <= boardSize; i++)
+            {
+                notes.Add(i);
+            }
         }
 
         public int GetValue() => value;
 
         public HashSet<int> GetNotes() => notes;
         public (int, int) Coordinates { get { return coords; } }
+
         public void SolveFor(int newValue)
         {
             if (!notes.Contains(newValue))
                 throw new InvalidInputException($"solution {newValue} for square {Coordinates} is wrong.");
             value = newValue;
         }
-        public void Revert (int oldVal)
+        public void Unsolve()
         {
-            notes.Add(value);
-            value = oldVal;
+            if (notes == null) 
+                throw new InvalidInputException($"the square {Coordinates} cannot be unsolved.");
+            value = 0;
         }
-
+        
         public override string ToString()
         {
             string str = "";

@@ -12,6 +12,7 @@ namespace SudokuNator5000
     {
         static void Main(string[] args)
         {
+<<<<<<< HEAD
             /*int[,] mat = StrToMat("500090106103005092060020030001000009050000300006007001000870000002000600900200005");
             Board brd = new Board(9);
             brd.LoadBoard(mat);
@@ -95,6 +96,9 @@ namespace SudokuNator5000
             if (c >= 'a' && c <= 'z')
                 return (int)(c - 'a') + 10;
             else throw new InvalidCharacterException("Value must be a digit or a letter.");
+=======
+            SudokuPlayer.Play();
+>>>>>>> bugfix/backtracking_fail
         }
     }
 }
