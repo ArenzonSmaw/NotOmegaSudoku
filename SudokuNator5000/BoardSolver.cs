@@ -96,7 +96,7 @@ namespace SudokuNator5000
 
             try
             {
-                MakeNotes();
+                UpdateNotes();
             }
             catch (InvalidInputException)
             {
@@ -105,7 +105,8 @@ namespace SudokuNator5000
 
             try
             {
-                SolveByGuessing();
+                SolveSingles();
+                SolveByGuessing(2);
             }
             catch (Exception)
             { 
@@ -118,6 +119,7 @@ namespace SudokuNator5000
 
         public bool SolveSingles()
         {
+            //solves all certain solutions - naked singles and hidden singles.
             bool didChange = true;
             Square sqr;
             while (didChange)
@@ -144,11 +146,12 @@ namespace SudokuNator5000
         }
 
         
-        public bool SolveByGuessing()
+        public bool SolveByGuessing(int min)
         {
+            //solves sudoku board via pure backtracking. 
             Square sqr;
 
-            for (int minNotes = 1; minNotes <= size; minNotes++)
+            for (int minNotes = min; minNotes <= size; minNotes++)
             {
                 for (int row = 0; row < size; row++)
                 {
@@ -157,9 +160,9 @@ namespace SudokuNator5000
                         sqr = squares[row, col];
                         if (sqr.GetValue() == 0)
                         {
-                            for(int i = 1; i <= 9; i++)
+                            Move mv = new Move(sqr);
+                            for (int i = 1; i <= 9; i++)
                             {
-                                Move mv = new Move(sqr);
                                 if (IsGuessLegal(sqr, i))
                                 { 
                                     if (GuessFor(sqr, i))
@@ -259,6 +262,7 @@ namespace SudokuNator5000
             try
             {
                 SolveFor(sqr, solution);
+                //if(moveStack.Count() % 20 == 0) Console.WriteLine(board); // for debugging purposes
                 if (Solve())
                 {
                     return true;
@@ -282,12 +286,14 @@ namespace SudokuNator5000
             //pops past moves and reverses them
 
             Move mv;
+            int row, col;
             while(moveStack.Count > 0 && moveStack.Peek() != lastMove) 
             {
                 mv = moveStack.Pop();
-                squares[mv.Row, mv.Col] = mv.GetOldSquare();
-                UpdateNotes();
+                (row, col) = mv.GetOldSquare().Coordinates;
+                squares[row, col].Unsolve();
             }
+            UpdateNotes();
         }
 
         public void MakeNotes()

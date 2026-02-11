@@ -25,7 +25,7 @@ namespace SudokuNator5000
                 try
                 {
                     Board brd;
-                    Console.Write("Please Enter a sudoku board ('quit' to exit):> ");
+                    Console.WriteLine("Please Enter a sudoku board ('quit' to exit):> ");
                     int[,] input = GetUserInput();
                     if (!quit)
                     {
@@ -38,11 +38,12 @@ namespace SudokuNator5000
                         {
                             Console.WriteLine("Solved Board:");
                             brd.PrintBoard();
+                            Console.WriteLine(brd); //for debugging purposes
                         }
                         else
                             Console.WriteLine("board unsolvable");
                         sw.Stop();
-                        Console.WriteLine($"Time Elapsed: {sw.Elapsed}");
+                        Console.WriteLine($"Time Elapsed: {(double)sw.ElapsedMilliseconds/1000.0} seconds.");
                     }
                 }
                 catch (Exception e)
