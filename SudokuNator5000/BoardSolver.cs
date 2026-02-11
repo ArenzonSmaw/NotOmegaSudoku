@@ -28,6 +28,8 @@ namespace SudokuNator5000
         public Board GetBoard() => board;
         public bool IsSolved()
         {
+            //checks if every square on the board is solved and returns a bool accordingly
+
             bool isSolved = true;
             foreach (Square square in squares)
             {
@@ -51,6 +53,8 @@ namespace SudokuNator5000
 
         public HashSet<Square> GetRowOf(Square sqr)
         {
+            //returns a set with the squares in the same row as sqr
+
             int row = sqr.Coordinates.Item1;
             int col = sqr.Coordinates.Item2;
             HashSet<Square> sqrSet = new HashSet<Square>();
@@ -63,6 +67,8 @@ namespace SudokuNator5000
         }
         public HashSet<Square> GetColOf(Square sqr)
         {
+            //returns a set of the squares in the same column as sqr
+
             int row = sqr.Coordinates.Item1;
             int col = sqr.Coordinates.Item2;
             HashSet<Square> sqrSet = new HashSet<Square>();
@@ -75,6 +81,8 @@ namespace SudokuNator5000
         }
         public HashSet<Square> GetBlockOf(Square sqr)
         {
+            //returns set of the squares in the same block as sqr
+
             int root = (int)Math.Sqrt(size);
             int block_row = (sqr.Coordinates.Item1 / root) * root;
             int block_col = (sqr.Coordinates.Item2 / root) * root;
@@ -182,6 +190,8 @@ namespace SudokuNator5000
 
         public bool IsGuessLegal(Square sqr, int guess)
         {
+            // checks if the guessing guess for sqr is legal
+
             HashSet<Square>[] neighbors =
             {
                 GetRowOf(sqr),

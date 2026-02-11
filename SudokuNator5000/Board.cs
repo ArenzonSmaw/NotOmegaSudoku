@@ -155,6 +155,8 @@ namespace SudokuNator5000
         }
         public override string ToString()
         {
+            //prints the board in the same format as the input string
+
             string str = "";
             for (int i = 0; i < size; i++)
             {

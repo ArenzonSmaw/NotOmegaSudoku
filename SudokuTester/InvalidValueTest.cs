@@ -56,22 +56,5 @@ namespace SudokuTester
             puzzle.LoadBoard(input);
             Assert.ThrowsException<UnsolvableBoardException>(() => { puzzle.Solve(); });
         }
-
-        /*[TestMethod]
-        public void TestUnsolvable3()
-        {
-            int[,] input = SudokuPlayer.StrToMat(   "100000000"+
-                                                    "000100000"+
-                                                    "000000005"+
-                                                    "000000100"+
-                                                    "000000000"+
-                                                    "000000000"+
-                                                    "000000000"+
-                                                    "000000010"+
-                                                    "000000000");
-            Board puzzle = new Board(9);
-            puzzle.LoadBoard(input);
-            Assert.ThrowsException<UnsolvableBoardException>(() => { puzzle.Solve(); });
-        }*/
     }
 }

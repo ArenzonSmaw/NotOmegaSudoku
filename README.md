@@ -12,7 +12,7 @@ This app, pretty self explanatory, is a sudoku solver. How it generally works is
 
 #### User's Guide
 
-Before you use this solver program, you need to first run the code in your project. You will need to have the program's files installed on your device. And only then, inside your main program, run the command '**SudokuPlayer.Play()**' to initiate the program's command line interface. 
+Before you use this solver program, you need to first run the code in your project. You will need to have the program's files installed on your device. And only then, inside your main program, run the command '**SudokuPlayer.Play()**' to initiate the program's command line interface.
 
 Important note: the Play() command mentioned above does receive a parameter. The parameter tells the program which size board to expect from the user. If left blank, the size expected will be 9. If the parameter is 0 (**SudokuPlayer.Play(0)**), it activates dynamic mode that means it will create a board according to the user's input size. any other value needs to be a square of some integer, otherwise an error will appear.
 
@@ -34,7 +34,7 @@ The purpose of this guide it to demonstrate the structure of the program and log
 
 ##### Motivation
 
-The approach to this solver program is to solve it as humanly as possible. Meaning, the program is written so it portrays the human approach to solving sudoku puzzles, with code. The reason for this being for simpler, more intuitive programming. For the cost of possible efficiency. 
+The approach to this solver program is to solve it as humanly as possible. Meaning, the program is written so it portrays the human approach to solving sudoku puzzles, with code. The reason for this being for simpler, more intuitive programming. For the cost of possible efficiency.
 
 
 
@@ -72,7 +72,7 @@ Object methods include printing the board, loading a board, checking validity an
 
 ###### **Move**
 
-This object represents one move, it can either be a checking off of a note in a square or the solving of a square. 
+This object represents one move, it can either be a checking off of a note in a square or the solving of a square.
 
 It holds an instance of a square, representing the old square.
 
@@ -103,6 +103,13 @@ The program uses 2 main exceptions to deal with any sort of input.
 
 
 
+###### **Additional Data Structures**
+
+* A stack is used to store past moves. It is a regular LIFO stack (Last In First Out). meaning the most recently pushed move into the stack, will be the first to be popped out of the stack. This is perfect for keeping track of moves in algorithms like these.
+* Hash Sets are used to store integer variables and Square objects. Objects in a set are stored with no certain order, and without multiple equal objects. For this reason, sets are good to store notes of a square, or collect neighboring squares to iterate through.
+
+
+
 
 
 ##### **Algorithmic Overview**
@@ -121,7 +128,7 @@ Inside the user interface class, right before creating and loading the sudoku bo
 
 ###### 2\. Board Building
 
-After an input string has been successfully processed into an integer matrix. The program constructs the board with its size (fixed size or matching input size, depends on the Play size parameter), and then loads the matrix into the board object. 
+After an input string has been successfully processed into an integer matrix. The program constructs the board with its size (fixed size or matching input size, depends on the Play size parameter), and then loads the matrix into the board object.
 
 * LoadBoard() - Receives the integer matrix and builds the board matrix accordingly. if the square already has a value, it builds it as a fixed valued square with a null notes set, if the value is 0, it initiates the square with the value 0 and a notes set consisting of all the values from 1 to the board size.
 
@@ -129,7 +136,7 @@ After an input string has been successfully processed into an integer matrix. Th
 
 ###### 3\. Solving
 
-The solving algorithm is based on a recursive backtracking approach and is broken down to three more parts. Note taking, Solving and guessing. 
+The solving algorithm is based on a recursive backtracking approach and is broken down to three more parts. Note taking, Solving and guessing.
 
 * Note taking - For each square, all its neighbors are visited, and if a neighbor is already solved to a certain value. that value will be checked off of the squares notes set.
 * Solving - After we made out notes, There might be some squares that only have one possible solution, or has a unique possibility in one of its groups (row, column, block). such square is solvable with certainty, so we solve the square, document the move, and push the move down the moves stack.
@@ -138,4 +145,8 @@ The solving algorithm is based on a recursive backtracking approach and is broke
 
 
 
+
+#### Personal Reflection
+
+I will start this part from the conclusion: I am not happy with how the app turned out. The solver, although reaches a correct solution for all the board I've tested it on, is too slow for my liking and that is because the algorithm is too heavy. There are countless ways to optimize the algorithm so it will run more lightly, solving the hardest puzzles in a fraction of a second, but it is not the case with my project. The reason for this screw up is bad planning from my behalf. I haven't managed my time right for the task, and it shows. I would really like to apologize for the poor performance and to say I have learned my lesson. I find my peace with the fact that the algorithm could at least solve the hard puzzles i gave it, but it fails to meet the project's efficiency requirement. What I learned from this experience is that when faced with two tasks, I will from now on prioritize the more important task to avoid similar incidents going forward. Thank you so much for joining me on this brief journey, have a nice rest of your day.
 

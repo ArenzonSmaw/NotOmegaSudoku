@@ -43,12 +43,16 @@ namespace SudokuNator5000
         }
         public Square(Square other)
         {
+            //copy constructor
+
             value = other.GetValue();
             coords = other.coords;
             notes = new HashSet<int>(other.notes);
         }
         public bool CheckOff(int value)
         {
+            //removes value from notes
+
             if (this.value == 0)
             {
                 if (notes.Contains(value))
@@ -63,6 +67,8 @@ namespace SudokuNator5000
         }
         public void ResetNotes(int boardSize)
         {
+            //resets notes of square to all 9 possibilities
+
             notes = new HashSet<int>();
             for (int i = 1; i <= boardSize; i++)
             {
@@ -77,12 +83,14 @@ namespace SudokuNator5000
 
         public void SolveFor(int newValue)
         {
+            //solves square for newValue
             if (!notes.Contains(newValue))
                 throw new InvalidInputException($"solution {newValue} for square {Coordinates} is wrong.");
             value = newValue;
         }
         public void Unsolve()
         {
+            //undos the solve method for square
             if (notes == null) 
                 throw new InvalidInputException($"the square {Coordinates} cannot be unsolved.");
             value = 0;
