@@ -1,0 +1,97 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SudokuNator5000
+{
+    public class SudokuPlayer
+    {
+        static bool quit;
+        public static void Play()
+        {
+            quit = false;
+            do
+            {
+                var sw = Stopwatch.StartNew();
+                try
+                {
+                    Board brd;
+                    Console.Write("Please Enter a sudoku board ('quit' to end):> ");
+                    int[,] input = GetUserInput();
+                    if (!quit)
+                    {
+                        brd = new Board(input.GetLength(0));
+                        brd.LoadBoard(input);
+                        Console.WriteLine("Board Entered:");
+                        brd.PrintBoard();
+
+                        if (brd.Solve())
+                        {
+                            Console.WriteLine("Solved Board:");
+                            brd.PrintBoard();
+                        }
+                        else
+                            Console.WriteLine("board unsolvable");
+                        sw.Stop();
+                        Console.WriteLine($"Time Elapsed: {sw.Elapsed}");
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.Write($"{e.Message} \n try again:\n");
+                }
+            } while (!quit);
+        }
+        public static int[,] GetUserInput()
+        {
+            //gets input from user and returns a matrix representing the input
+
+            string input;
+            input = Console.ReadLine();
+
+            if (input.Equals("quit"))
+            {
+                quit = true;
+                return null;
+            }
+
+            return StrToMat(input);
+        }
+        public static int[,] StrToMat(string input)
+        {
+            //gets string representing the input mat
+            //returns an int matrix representing the input
+
+            int[,] ret;
+            int length = input.Length;
+            int size = (int)Math.Sqrt(length);
+            if (length % size != 0)
+                throw new InvalidBoardSizesException("Board dimentions are not square");
+            ret = new int[size, size];
+
+            for (int i = 0; i < size; i++)
+            {
+                for (int j = 0; j < size; j++)
+                {
+                    ret[i, j] = CharToInt(input[i * size + j]);
+                }
+            }
+            return ret;
+        }
+        public static int CharToInt(char c)
+        {
+            //translates ascii values of the input to numeric values
+
+            if (c >= '0' && c <= '9')
+                return c - '0';
+            if (c >= 'A' && c <= 'Z')
+                return c - 'A';
+            if (c >= 'a' && c <= 'z')
+                return c - 'a';
+            else throw new InvalidCharacterException("Square value must be a digit or a letter.");
+        }
+    }
+}
