@@ -8,17 +8,22 @@ namespace SudokuNator5000
 {
     public class Move
     {
-        //stores the old square of a move1
-        Square oldSqr;
-        public Move(Square sqr)
+        //stores the coordinates and new value of a square
+        private int row, col, row_mask, col_mask, block_mask;
+        public Move(int row, int col, int row_mask, int col_mask, int block_mask)
         {
-            oldSqr = new Square(sqr);
+            this.row = row;
+            this.col = col;
+            this.row_mask = row_mask;
+            this.col_mask = col_mask;
+            this.block_mask = block_mask;
         }
 
-        public int Row { get { return oldSqr.Coordinates.Item1; } }
-        public int Col { get { return oldSqr.Coordinates.Item2; } }
-
-        public Square GetOldSquare() => oldSqr;
+        public int Row { get { return row; } }
+        public int Col { get { return col; } }
+        public int RowMask { get { return row_mask; } }
+        public int ColMask { get { return col_mask; } }
+        public int BlockMask { get { return block_mask; } }
 
     }
 }

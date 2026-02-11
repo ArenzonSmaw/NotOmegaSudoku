@@ -30,18 +30,11 @@ namespace SudokuNator5000
             {
                 for (int j = 0; j < size; j++)
                 {
-                    if (numMatrix[i, j] != 0)
-                    {
-                        if (numMatrix[i, j] > size)
-                            throw new InvalidCharacterException($"Invalid Character: Maximal value for square in {size} sized matrix is: {size}.");
-                        else if (numMatrix[i, j] < 0)
-                            throw new InvalidCharacterException($"Invalid Character: Value cannot be less than 0.");
-                        this.board_mat[i, j] = new Square(numMatrix[i, j]);
-                    }
-                    else
-                    {
-                        this.board_mat[i, j] = new Square(size, i, j);
-                    }
+                    if (numMatrix[i, j] > size)
+                        throw new InvalidCharacterException($"Invalid Character: Maximal value for square in {size} sized matrix is: {size}.");
+                    else if (numMatrix[i, j] < 0)
+                        throw new InvalidCharacterException($"Invalid Character: Value cannot be less than 0.");
+                    this.board_mat[i, j] = new Square(i,j,numMatrix[i, j]);
                 }
             }
             CheckValid();

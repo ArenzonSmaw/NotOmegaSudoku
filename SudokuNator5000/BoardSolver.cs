@@ -17,12 +17,22 @@ namespace SudokuNator5000
         private int size;
         private Stack<Move> moveStack;
 
+        private int[] rows_masks;
+        private int[] cols_masks;
+        private int[] blocks_masks;
+        private int clipper;
+
         public BoardSolver(Board board)
         {
             this.board = board;
             this.squares = board.GetBoardMat();
             this.size = squares.GetLength(0);
             moveStack = new Stack<Move>();
+
+            rows_masks = new int[size];
+            cols_masks = new int[size];
+            blocks_masks = new int[size];
+            clipper = (1 << size) - 1;
         }
 
         public Board GetBoard() => board;
@@ -48,65 +58,17 @@ namespace SudokuNator5000
             }
             return true;
         }
-
-        public HashSet<Square> GetRowOf(Square sqr)
-        {
-            int row = sqr.Coordinates.Item1;
-            int col = sqr.Coordinates.Item2;
-            HashSet<Square> sqrSet = new HashSet<Square>();
-            for (int i = 0; i < size; i++)
-            {
-                if (i != col)
-                    sqrSet.Add(squares[row, i]);
-            }
-            return sqrSet;
-        }
-        public HashSet<Square> GetColOf(Square sqr)
-        {
-            int row = sqr.Coordinates.Item1;
-            int col = sqr.Coordinates.Item2;
-            HashSet<Square> sqrSet = new HashSet<Square>();
-            for (int i = 0; i < size; i++)
-            {
-                if (i != row)
-                    sqrSet.Add(squares[i, col]);
-            }
-            return sqrSet;
-        }
-        public HashSet<Square> GetBlockOf(Square sqr)
-        {
-            int root = (int)Math.Sqrt(size);
-            int block_row = (sqr.Coordinates.Item1 / root) * root;
-            int block_col = (sqr.Coordinates.Item2 / root) * root;
-            HashSet<Square> sqrSet = new HashSet<Square>();
-            for (int offset_row = 0; offset_row < root; offset_row++)
-            {
-                for (int offset_col = 0; offset_col < root; offset_col++)
-                {
-                    if ((offset_row, offset_col) != sqr.Coordinates)
-                        sqrSet.Add(squares[block_row + offset_row, block_col + offset_col]);
-                }
-            }
-            return sqrSet;
-        }
-
+        
         public bool Solve()
         {
             //solves board first by marking obvious solutions, then guessing a square with a minimal note count
 
-            try
-            {
-                UpdateNotes();
-            }
-            catch (InvalidInputException)
-            {
-                throw new UnsolvableBoardException();
-            }
+            MakeMasks();
 
             try
             {
                 SolveSingles();
-                SolveByGuessing(2);
+                SolveByGuessing();
             }
             catch (Exception)
             { 
@@ -145,59 +107,72 @@ namespace SudokuNator5000
             return IsSolved();
         }
 
-        
-        public bool SolveByGuessing(int min)
+
+        public bool SolveByGuessing()
         {
-            //solves sudoku board via pure backtracking. 
-            Square sqr;
+            
+            int bestRow = -1;
+            int bestCol = -1;
+            int minCandidates = size + 1;
 
-            for (int minNotes = min; minNotes <= size; minNotes++)
+            for (int r = 0; r < size; r++)
             {
-                for (int row = 0; row < size; row++)
+                for (int c = 0; c < size; c++)
                 {
-                    for (int col = 0; col < size; col++)
+                    if (squares[r, c].GetValue() == 0)
                     {
-                        sqr = squares[row, col];
-                        if (sqr.GetValue() == 0)
+                        int mask = ~(rows_masks[r] | cols_masks[c] | blocks_masks[CoordsToBlockNum(r, c)]) & clipper;
+                        int count = CountSetBits(mask); 
+                        if (count < minCandidates)
                         {
-                            Move mv = new Move(sqr);
-                            for (int i = 1; i <= 9; i++)
-                            {
-                                if (IsGuessLegal(sqr, i))
-                                { 
-                                    if (GuessFor(sqr, i))
-                                        return true;
-                                    sqr.Unsolve();
-
-                                }
-                                
-                            }
-                            throw new UnsolvableBoardException();
+                            minCandidates = count;
+                            bestRow = r; bestCol = c;
                         }
                     }
                 }
             }
-            return IsSolved();
+
+            
+            if (bestRow == -1) return true;
+
+            
+            int possibleMask = ~(rows_masks[bestRow] | cols_masks[bestCol] | blocks_masks[CoordsToBlockNum(bestRow, bestCol)]) & clipper;
+
+            for (int v = 1; v <= size; v++)
+            {
+                if ((possibleMask & (1 << (v - 1))) != 0)
+                {
+                    Move m = new Move(bestRow, bestCol, rows_masks[bestRow], cols_masks[bestCol], blocks_masks[CoordsToBlockNum(bestRow, bestCol)]);
+
+                    if (CommitMove(m, v))
+                    {
+                        if (SolveByGuessing()) return true; // Recurse!
+                        UndoMove(m); // Backtrack
+                    }
+                }
+            }
+
+            return false; // No number worked here, go back up a level
+        }
+
+        public int CountSetBits(int mask)
+        {
+            int count = 0;
+            while (mask > 0)
+            {
+                count++;
+                mask >>= 1;
+            }
+            return count;
         }
 
         public bool IsGuessLegal(Square sqr, int guess)
         {
-            HashSet<Square>[] neighbors =
-            {
-                GetRowOf(sqr),
-                GetColOf(sqr),
-                GetBlockOf(sqr)
-            };
+            (int row, int col) = sqr.Coordinates;
+            int block = CoordsToBlockNum(row, col);
+            int mask = ~(rows_masks[row] | cols_masks[col] | blocks_masks[block]) & clipper;
 
-            for (int i = 0; i <  neighbors.Length; i++)
-            {
-                foreach(Square neighbor in neighbors[i])
-                {
-                    if (neighbor.GetValue() == guess)
-                        return false;
-                }
-            }
-            return true;
+            return ((mask & guess) != 0);
         }
 
         public int IsSolvable(Square sqr)
@@ -205,79 +180,132 @@ namespace SudokuNator5000
             //gets square obj and coordinates
             //returns a solution if sqr is solvable, else 0
 
-            HashSet<int> notes = sqr.GetNotes();
-            if (notes.Count() == 1) //if given square has only 1 note
-                return notes.First();
-            
-            HashSet<Square>[] neighbors = {
-                            GetRowOf(sqr),      //page = 0
-                            GetColOf(sqr),      //page = 1
-                            GetBlockOf(sqr)     //page = 2
-                            };
-            
+            if (sqr.GetValue() != 0)
+                return 0;
+            int solution;
+            int row, col, block;
+            (row, col) = sqr.Coordinates;
+            block = CoordsToBlockNum(row, col);
 
-            for (int page = 0; page < 3; page++)
+            solution = IsNakedSingle(sqr, row, col, block);
+            if (solution == 0)
             {
-                HashSet<int> diff = new HashSet<int>(notes);
-                foreach(Square square in neighbors[page])
-                {
-                    if (diff == null) break;
-                    if (square.GetValue() == 0)
-                        diff.ExceptWith(square.GetNotes());
-                }
-                if (diff.Count() == 1) return diff.First();
+                solution = IsHiddenSingle(sqr, row, col, block);
             }
 
-            return 0; //return unsolvable
+            return solution; 
         }
+        public int IsNakedSingle(Square sqr, int row, int col, int block)
+        {
+            int notes = ~(rows_masks[row] | cols_masks[col] | blocks_masks[block]) & ((1 << size)-1);
 
+            if (notes == 0)
+                throw new InvalidInputException($"Square {sqr.Coordinates} has no possible solutions.");
+
+            if ((notes & (notes - 1)) == 0) 
+                return (int)(Math.Log(notes) / Math.Log(2)) + 1;
+
+            return 0;
+        }
+        public int IsHiddenSingle(Square sqr, int row, int col, int block)
+        {
+            int notes = ~(rows_masks[row] | cols_masks[col] | blocks_masks[block]) & clipper;
+            int solution = 1;
+
+            while(notes > 0)
+            {
+                if ((notes & 1) == 0)
+                    continue;
+                if (IsUnique(row, col, solution))
+                    return solution;
+                notes >>= 1;
+                solution++;
+            }
+            return 0;
+        }
+        public bool IsUnique(int row, int col, int value)
+        {
+            int count = 0;
+            int sqrMask = 0;
+            for(int icol = 0; icol < size; icol++)
+            {
+                if (squares[row, icol].GetValue() == 0)
+                {
+                    sqrMask = ~(rows_masks[row] | cols_masks[icol] | blocks_masks[CoordsToBlockNum(row, icol)]) & clipper;
+                    if ((sqrMask & (1 << (value - 1))) != 0)
+                        count++;
+                }
+            }
+            if (count == 1) return true;
+            
+            count = 0;
+            for (int irow = 0; irow < size; irow++)
+            {
+                if (squares[irow, col].GetValue() == 0)
+                {
+                    sqrMask = ~(rows_masks[irow] | cols_masks[col] | blocks_masks[CoordsToBlockNum(irow, col)]) & clipper;
+                    if ((sqrMask & (1 << (value - 1))) != 0)
+                        count++;
+                }
+            }
+            if (count == 1) return true;
+
+            count = 0;
+            int root = (int)Math.Sqrt(size);
+            int bRow = row - (row % root), bCol = col - (col % root);
+            int block = CoordsToBlockNum(bRow, bCol);
+            for (int i = 0; i < root; i++)
+            {
+                for (int j = 0; j < root; j++)
+                {
+                    if (squares[bRow + i, bCol + j].GetValue() == 0)
+                    {
+                        sqrMask = ~(rows_masks[bRow + i] | cols_masks[bCol + j] | blocks_masks[block]) & clipper;
+                        if ((sqrMask & (1 << (value - 1))) != 0)
+                            count++;
+                    }
+                }
+            }
+            if (count == 1) return true;
+            return false;
+        }
         public void SolveFor(Square sqr, int solution)
         {
             //Solves square by updating the value and pushing the move into the move stack
-            if (!sqr.GetNotes().Contains(solution)) 
-                throw new InvalidInputException($"Solution {solution} for square {sqr.Coordinates} is impossible.");
             (int row, int col) = sqr.Coordinates;
 
-            Move Move = new Move(sqr);
+            Move move = new Move(row, col, rows_masks[row], cols_masks[col], blocks_masks[CoordsToBlockNum(row,col)]);
             //int mCount = moveStack.Count();
-            sqr.SolveFor(solution);
-            moveStack.Push(Move);
-            try
-            {
-                UpdateNotes();
-            }
-            catch (Exception)
-            {
-                throw new UnsolvableBoardException();
-            }
+            if (!CommitMove(move, solution))
+                throw new InvalidInputException($"Solution {solution} for square {sqr.Coordinates} is impossible.");
         }
 
-        public bool GuessFor(Square sqr, int solution)
+        public bool GuessFor(Move move, int solution)
         {
             //gets: square object and possible solution
             //returns: true if board is solvable for this guess and false otherwise
 
             Move lastMove = moveStack.Count > 0 ? moveStack.Peek() : null;
 
+            
+            if (!CommitMove(move, solution))
+                return false;
+            Console.WriteLine(board);
             try
-            {
-                SolveFor(sqr, solution);
-                //if(moveStack.Count() % 20 == 0) Console.WriteLine(board); // for debugging purposes
+            {   
                 if (Solve())
                 {
                     return true;
                 }
-                else
-                {
-                    RevertChanges(lastMove);
-                    return false;
-                }
+                
             }
             catch (UnsolvableBoardException)
             {
                 RevertChanges(lastMove);
                 return false;
             }
+            RevertChanges(lastMove);
+            return false;
         }
 
         public void RevertChanges(Move lastMove)
@@ -286,54 +314,98 @@ namespace SudokuNator5000
             //pops past moves and reverses them
 
             Move mv;
-            int row, col;
             while(moveStack.Count > 0 && moveStack.Peek() != lastMove) 
             {
                 mv = moveStack.Pop();
-                (row, col) = mv.GetOldSquare().Coordinates;
-                squares[row, col].Unsolve();
+                UndoMove(mv);
             }
-            UpdateNotes();
+            MakeMasks();
         }
 
-        public void MakeNotes()
+        public void MakeMasks()
         {
-            //goes over the entire board and checks off all impossible possibilities
-
-            int block_size = (int)Math.Sqrt(size);
-
             for (int i = 0; i < size; i++)
             {
-                for (int j = 0; j < size; j++)
-                {   
-                    if (squares[i, j].GetValue() != 0) continue;
+                rows_masks[i] = 0;
+                cols_masks[i] = 0;
+                blocks_masks[i] = 0;
 
-                    HashSet<Square>[] neighbors = {
-                        GetRowOf(squares[i,j]),     //page=0
-                        GetColOf(squares[i,j]),     //page=1
-                        GetBlockOf(squares[i,j])    //page=2
-                    };
-                    
-                    for (int page = 0; page < 3; page++)
-                    {
-                        foreach(Square sqr in neighbors[page])
-                        {
-                            squares[i, j].CheckOff(sqr.GetValue());
-                        }
-                    }
+                UpdateRowMask(i);
+                UpdateColMask(i);
+                UpdateBlockMask(i);
+            }
+        }
+        public int CoordsToBlockNum(int row, int col)
+        {
+            int root = (int)Math.Sqrt(size);
+            return (row / root) * root + (col / root);
+        }
+        public (int, int) BlockNumToCoords(int block)
+        {
+            int root = (int)Math.Sqrt(size);
+            return (block - (block % root), (block % root) * root);
+        }
+        public void UpdateRowMask(int row)
+        {
+            for (int col = 0; col < size; col++)
+            {
+                if (squares[row,col].GetValue() != 0) 
+                    rows_masks[row] |= 1 << (squares[row, col].GetValue() - 1);
+            }
+        }
+        public void UpdateColMask(int col)
+        {
+            for (int row = 0; row < size; row++)
+            {
+                if (squares[row, col].GetValue() != 0)
+                    cols_masks[col] |= 1 << (squares[row, col].GetValue() - 1);
+            }
+        }
+        public void UpdateBlockMask(int block)
+        {
+            int root = (int)Math.Sqrt(size);
+            (int bRow, int bCol) = BlockNumToCoords(block);
+            for (int i = 0; i < root; i++)
+            {
+                for (int j = 0; j < root; j++)
+                {
+                    if (squares[bRow + i, bCol + j].GetValue() != 0)
+                        blocks_masks[block] |= 1 << (squares[bRow + i, bCol + j].GetValue() - 1);
                 }
             }
         }
-        public void UpdateNotes() 
+        public void UpdateMasks(int row, int column)
         {
-            //updaets row column and block of the square so that the new value is checked off
+            UpdateRowMask(row);
+            UpdateColMask(column);
+            UpdateBlockMask(CoordsToBlockNum(row,column));  
+        }
 
-            foreach (Square sqr in squares)
-            {
-                if (sqr.GetValue() == 0)
-                    sqr.ResetNotes(size);
-            }
-            MakeNotes();
+        public bool CommitMove(Move move, int value)
+        {
+            int block = CoordsToBlockNum(move.Row, move.Col);
+            int bit = 1 << (value - 1);
+            if (((rows_masks[move.Row] | cols_masks[move.Col] | blocks_masks[block]) & bit) != 0)
+                return false;
+
+            rows_masks[move.Row]    |= bit;
+            cols_masks[move.Col]    |= bit;
+            blocks_masks[block]     |= bit;
+
+            squares[move.Row, move.Col].SolveFor(value);
+            moveStack.Push(move);
+
+            return true;
+        }
+        public void UndoMove(Move move)
+        {
+            int block = CoordsToBlockNum(move.Row, move.Col);
+
+            rows_masks[move.Row] = move.RowMask;
+            cols_masks[move.Col] = move.ColMask;
+            blocks_masks[block] = move.BlockMask;
+
+            squares[move.Row, move.Col].Unsolve();
         }
     }
 }

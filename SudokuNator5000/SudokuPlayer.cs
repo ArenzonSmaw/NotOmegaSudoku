@@ -21,7 +21,6 @@ namespace SudokuNator5000
             bool dynamic = n == 0;
             do
             {
-                var sw = Stopwatch.StartNew();
                 try
                 {
                     Board brd;
@@ -42,13 +41,11 @@ namespace SudokuNator5000
                         }
                         else
                             Console.WriteLine("board unsolvable");
-                        sw.Stop();
-                        Console.WriteLine($"Time Elapsed: {(double)sw.ElapsedMilliseconds/1000.0} seconds.");
                     }
                 }
                 catch (Exception e)
                 {
-                    Console.Write($"{e.Message} \n try again:\n");
+                    Console.Write($"{e.Message}. Please try again:\n");
                 }
             } while (!quit);
         }
