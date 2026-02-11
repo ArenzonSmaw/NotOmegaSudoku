@@ -12,18 +12,24 @@ namespace SudokuNator5000
         static bool quit;
         public static void Play()
         {
+            Play(9);
+        }
+        public static void Play(int n)
+        {
+            Console.WriteLine("Welcome to The Sudokunator 5000!\n");
             quit = false;
+            bool dynamic = n == 0;
             do
             {
                 var sw = Stopwatch.StartNew();
                 try
                 {
                     Board brd;
-                    Console.Write("Please Enter a sudoku board ('quit' to end):> ");
+                    Console.Write("Please Enter a sudoku board ('quit' to exit):> ");
                     int[,] input = GetUserInput();
                     if (!quit)
                     {
-                        brd = new Board(input.GetLength(0));
+                        brd = new Board(dynamic ? input.GetLength(0) : n);
                         brd.LoadBoard(input);
                         Console.WriteLine("Board Entered:");
                         brd.PrintBoard();
